@@ -1,0 +1,29 @@
+name: Windows source checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+      - name: Syntax, versions and deterministic tests
+        run: node scripts/check.mjs
+      - name: Compile Windows launcher and installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path runtime,.state -Force | Out-Null
+          Copy-Item -LiteralPath (Get-Command node).Source -Destination runtime/node.exe
+          ./scripts/build-launcher.ps1
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+          & $compiler /nologo /target:winexe /reference:System.dll /reference:System.Core.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll /out:.state/Setup-Tom.exe scripts/Installer.cs
+          if($LASTEXITCODE -ne 0){throw 'Installer compilation failed.'}
+# Model benchmarks and offline package qualification need the pinned multi-GB
+# assets and physical target hardware. This workflow does not claim either.

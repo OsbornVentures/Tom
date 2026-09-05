@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "minimumDecodeTps": 6,
+  "maximumFirstTokenMs": 12000,
+  "minimumFreeGiB": 1.25,
+  "maximumLoadMs": 90000,
+  "maximumCheckMs": 480000,
+  "contextSteps": [2048, 4096, 8192],
+  "upgradeMinimumPredictedTps": 6,
+  "defaultThreadsCap": 4
+}

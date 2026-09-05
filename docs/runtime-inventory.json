@@ -1,0 +1,12 @@
+[
+  {
+    "path": "runtime/node.exe",
+    "bytes": 92825416,
+    "sha256": "3602f2bb1a10f2cbab4c36886218a33c1ab3db87290e73b033c46c77147d0237"
+  },
+  {
+    "path": "runtime/browser/node_modules/playwright-core/package.json",
+    "bytes": 876,
+    "sha256": "07c47543631fef9508760365dee9fbe958c562093ec8d122543949ed231f233f"
+  }
+]

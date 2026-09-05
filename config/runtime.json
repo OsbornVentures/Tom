@@ -1,0 +1,28 @@
+{
+  "adapter": "llama.cpp",
+  "dispatchVersion": "tom-dispatch-v1",
+  "revision": "b10809 / 5266f24da",
+  "executable": "runtime/llama/llama-server.exe",
+  "sha256": "cb29f66008d4d73cce17cab2c2569ab318eb244b0b2ca2a15024b44d90dfcd3f",
+  "model": {
+    "id": "gemma-4-e2b",
+    "name": "Gemma 4 E2B",
+    "revision": "675cff42a74c774d6cb76f76d8eacb49b48c9b93",
+    "path": "models/gemma-4-E2B_q4_0-it.gguf",
+    "bytes": 3349516256,
+    "sha256": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634"
+  },
+  "vision": {
+    "path": "models/gemma-4-E2B-it-mmproj.gguf",
+    "bytes": 986833664,
+    "sha256": "021059cce659fe7f9170d5599761d7bbaf644b798dab9503aca30dc43e6beb14",
+    "modelRevision": "675cff42a74c774d6cb76f76d8eacb49b48c9b93"
+  },
+  "context": 4096,
+  "threads": 4,
+  "gpuLayers": 0,
+  "idleUnloadMs": 300000,
+  "cacheTypeK": "q8_0",
+  "cacheTypeV": "q8_0",
+  "flashAttention": "on"
+}

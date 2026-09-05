@@ -1,0 +1,33 @@
+// UI transport test with synthetic SSE events. Real model quality is measured
+// separately by benchmark.mjs; this test never claims a model-led search pass.
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),out=path.join(root,'audit/v04');await fs.mkdir(out,{recursive:true});
+const state={product:{name:'Tom',version:'0.4.0'},fileCount:0,modelIdentity:'Gemma 4 E2B',runtime:{visionLoaded:false},settings:{cwd:root,theme:'night'},qualification:{running:false,report:{passed:true},offers:[],events:[]},tasks:[],active:null};
+const task={id:'ui-research',title:'Research UI fixture',cwd:root,status:'running',messages:[{role:'user',content:'Research UI fixture'}],events:[],actions:[],budget:null};
+let received,stream,sequence=0;
+const server=http.createServer(async(req,res)=>{
+ if(req.url==='/api/state'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify(state));return;}
+ if(req.url==='/api/research'){let body='';for await(const b of req)body+=b;received=JSON.parse(body);state.tasks=[task];res.writeHead(201,{'Content-Type':'application/json'});res.end(JSON.stringify({id:task.id}));return;}
+ if(req.url==='/api/tasks/ui-research'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify(task));return;}
+ if(req.url.startsWith('/api/tasks/ui-research/events')){stream=res;res.writeHead(200,{'Content-Type':'text/event-stream'});res.write(': connected\n\n');return;}
+ const files={'/':'index.html','/app.js':'app.js','/kernel.js':'kernel.js','/styles.css':'styles.css','/mark.svg':'mark.svg'},file=files[req.url];
+ if(!file){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':'text/html');res.end(await fs.readFile(path.join(root,'public',file)));
+});await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const send=(kind,text,detail={})=>{const e={id:++sequence,time:new Date().toISOString(),kind,text,detail};task.events.push(e);stream.write('data: '+JSON.stringify(e)+'\n\n');};
+const {chromium}=await import(pathToFileURL(path.join(root,'runtime/browser/node_modules/playwright-core/index.mjs'))),browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port+'/#key=synthetic-ui-test');await page.locator('#edition-version').getByText('0.4.0').waitFor();
+ await page.locator('#prompt').fill('localStorage setItem');await page.locator('#web-button').click();await page.locator('#conversation').waitFor({state:'visible',timeout:8000}).catch(async e=>{console.log({received,errors,toast:await page.locator('#toast').textContent()});throw e;});assert.equal(received.query,'localStorage setItem');
+ const deadline=Date.now()+5000;while(!stream&&Date.now()<deadline)await new Promise(r=>setTimeout(r,20));assert.ok(stream);
+ send('start','Reading your research request');send('action','Searching bing for “localStorage setItem”',{tool:'shell',arguments:{program:'tom-browser',args:['--action','search','--query','localStorage setItem']}});
+ await page.getByText('Searching bing for “localStorage setItem”',{exact:true}).first().waitFor();assert.equal(await page.locator('#activity').getAttribute('open'),null);assert.equal(await page.locator('html').getAttribute('data-activity'),'command');
+ const before=await page.evaluate(async()=> (await import('/kernel.js')).kernelStats().frames);await page.waitForTimeout(1000);const after=await page.evaluate(async()=> (await import('/kernel.js')).kernelStats().frames);assert.ok(after>before&&after-before<=17);
+ send('output','Provider returned no usable results.');task.status='blocked';send('blocked','Search needs human verification. No sources were obtained.');await page.locator('#resume-button').waitFor({state:'visible'});assert.equal(await page.locator('html').getAttribute('data-activity'),'review');assert.equal(await page.locator('#send-button').isEnabled(),true);
+ await page.locator('#activity > summary').click();await page.getByText('View action',{exact:true}).click();assert.match(await page.locator('#event-list').innerText(),/tom-browser/);await page.screenshot({path:path.join(out,'ui-event-stream.png')});
+ await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(async()=>!(await import('/kernel.js')).kernelStats().animating);assert.equal(await page.evaluate(async()=> (await import('/kernel.js')).kernelStats().animating),false);assert.deepEqual(errors,[]);
+ await fs.writeFile(path.join(out,'ui-check.json'),JSON.stringify({passed:true,syntheticEvents:true,modelDriven:false,researchEndpoint:true,collapsed:true,nestedAction:true,visibleBlocked:true,activeFrames:after-before,narrowOverflow:false,reducedMotion:true,errors},null,2));console.log('PASS: research button, streamed action, collapsed/nested details, blocked state, animation, narrow layout and reduced motion. Synthetic transport test.');
+}finally{await browser.close();stream?.end();server.closeAllConnections();await new Promise(r=>server.close(r));}

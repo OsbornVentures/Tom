@@ -1,0 +1,143 @@
+{
+  "version": "0.4.0",
+  "recorded": "2026-09-05T23:12:30.445Z",
+  "classification": "unsigned development package; one physical host",
+  "setup": {
+    "bytes": 27648,
+    "sha256": "0b6c968981e7b80a7140def03472ef124ac01d2c550eac3b1d70314385be8e51"
+  },
+  "launcher": {
+    "bytes": 32768,
+    "sha256": "0fc12dd16beeda3e2c18cc40594336faaea595316bac5e292ad61f9578323734"
+  },
+  "manifestSha256": "870a27a6c5145acd7473c4013a8ae4d2429d51465a5987e7bbf9a45a1449c713",
+  "payloadBytes": 4487430193,
+  "payloadFiles": 204,
+  "bytesByGroup": {
+    "harnessUiDocsNotices": 672270,
+    "modelWeights": 3349516256,
+    "visionProjector": 986833664,
+    "nodeRuntime": 92825416,
+    "playwrightCore": 13442086,
+    "nativeRuntime": 44140501
+  },
+  "buildChecks": {
+    "javascriptFiles": 48,
+    "tests": 50,
+    "passed": 50,
+    "failed": 0,
+    "nativeCompilation": true,
+    "githubActionsRun": false
+  },
+  "installation": {
+    "passed": true,
+    "verifiedFiles": 204,
+    "automaticCheck": true,
+    "minimalWindowsPath": true,
+    "networkDisconnected": false,
+    "installMode": "portable test; no Windows-menu registration",
+    "productionFileMismatches": []
+  },
+  "firstRun": {
+    "version": 1,
+    "started": "2026-09-05T23:08:15.234Z",
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz",
+    "ramGiB": 31.922454833984375,
+    "threads": 4,
+    "model": "Gemma 4 E2B",
+    "modelHash": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634",
+    "passed": true,
+    "contexts": [
+      4096
+    ],
+    "checks": [
+      {
+        "name": "decode",
+        "passed": true
+      },
+      {
+        "name": "tool-format",
+        "passed": true
+      },
+      {
+        "name": "recall-4096",
+        "passed": true,
+        "promptTokens": 2874,
+        "elapsedMs": 80002,
+        "firstTokenMs": 79071
+      },
+      {
+        "name": "vision",
+        "passed": true
+      }
+    ],
+    "metrics": {
+      "loadMs": 15437,
+      "elapsedMs": 10156,
+      "firstTokenMs": 740,
+      "decodeTps": 13.914160333939847,
+      "generatedTokens": 131,
+      "minimumFreeGiB": 20.656360626220703
+    },
+    "vision": true,
+    "reason": "Basic thresholds passed. Larger packages still need their own local trial.",
+    "finished": "2026-09-05T23:10:30.332Z"
+  },
+  "offers": [
+    {
+      "id": "gemma-4-e4b",
+      "eligible": true,
+      "predictedDecodeTps": 7,
+      "reasons": []
+    },
+    {
+      "id": "gemma-4-12b",
+      "eligible": false,
+      "predictedDecodeTps": 2.3,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ]
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "eligible": false,
+      "predictedDecodeTps": 4,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ]
+    },
+    {
+      "id": "gemma-4-31b",
+      "eligible": false,
+      "predictedDecodeTps": 0.9,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ]
+    }
+  ],
+  "upgradesDownloaded": false,
+  "ui": {
+    "passed": true,
+    "syntheticEvents": true,
+    "modelDriven": false,
+    "researchEndpoint": true,
+    "collapsed": true,
+    "nestedAction": true,
+    "visibleBlocked": true,
+    "activeFrames": 15,
+    "narrowOverflow": false,
+    "reducedMotion": true,
+    "errors": []
+  },
+  "benchmarkSourceHash": "bfdf869d5d08c7ca58be149111dcd755de9f3961d50f10e9dfaca0438ac6f835",
+  "postBenchmarkSourceChanges": [
+    {
+      "path": "scripts/build-offline.ps1",
+      "baselineSha256": "23bbf6a45f83356eae9d40e9ce55460fc319110ffc551569876152c67477d870",
+      "packagedSourceSha256": "ea7d6937c507f3b6615a31931cbfd9b5927a4d4ccc63fbade4aafacd5ddc7a98"
+    }
+  ],
+  "packagingCorrection": "PowerShell 7 emitted totalBytes as a decimal JSON number rejected by the .NET Int64 reader. The build now casts the summed size to Int64. The failed package is retained locally, not distributed. Production model/harness/UI files are unchanged from the baseline."
+}

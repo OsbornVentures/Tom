@@ -1,0 +1,17 @@
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import http from 'node:http';
+const session=JSON.parse(await fs.readFile('.state/session.json','utf8')),u=new URL(session.url),key=new URLSearchParams(u.hash.slice(1)).get('key'),base=u.origin;
+assert.equal((await fetch(base+'/api/state')).status,401);
+assert.equal((await fetch(base+'/api/state',{headers:{'X-Tom-Key':'wrong'}})).status,401);
+assert.equal((await fetch(base+'/api/state',{headers:{'X-Tom-Key':key,Origin:'https://unrelated.example'}})).status,403);
+const hostStatus=await new Promise((resolve,reject)=>{const req=http.get(base+'/api/state',{headers:{'X-Tom-Key':key,Host:'unrelated.example'}},res=>{res.resume();resolve(res.statusCode);});req.on('error',reject);});assert.equal(hostStatus,403);
+assert.equal((await fetch(base+'/../package.json')).status,404);
+assert.equal((await fetch(base+'/api/file?action=not-an-action',{headers:{'X-Tom-Key':key}})).status,400);
+assert.equal((await fetch(base+'/api/settings',{method:'POST',headers:{'X-Tom-Key':key,'Content-Type':'application/json'},body:JSON.stringify({cwd:'not/absolute'})})).status,400);
+const state=await(await fetch(base+'/api/state',{headers:{'X-Tom-Key':key}})).json();assert.equal(state.machine.platform,'win32');assert.ok(state.models.filter(m=>!m.bundled).every(m=>!m.installable));
+for(const body of [{budget:{maxSteps:0}},{budget:{maxTokens:99999999}},{theme:'unknown'}])assert.equal((await fetch(base+'/api/settings',{method:'POST',headers:{'X-Tom-Key':key,'Content-Type':'application/json'},body:JSON.stringify(body)})).status,400);
+const draftResponse=await fetch(base+'/api/drafts',{method:'POST',headers:{'X-Tom-Key':key,'Content-Type':'application/json'},body:JSON.stringify({text:'API handoff fixture',quote:'Quoted context only'})});assert.equal(draftResponse.status,201);const draft=await draftResponse.json();const restored=await(await fetch(base+'/api/drafts/'+draft.id,{headers:{'X-Tom-Key':key}})).json();assert.equal(restored.quote,'Quoted context only');
+const after=await(await fetch(base+'/api/state',{headers:{'X-Tom-Key':key}})).json();assert.equal(after.tasks.length,state.tasks.length,'A native draft must not start a model task');
+const files=await(await fetch(base+'/api/files',{headers:{'X-Tom-Key':key}})).json();assert.ok(Array.isArray(files));assert.ok(files.every(f=>!('messages' in f)&&f.verified));
+console.log('API passed: missing/wrong credentials, cross-origin and host rejection, static path restrictions, verified-file access, settings validation and model gating.');

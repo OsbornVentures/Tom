@@ -1,0 +1,733 @@
+{
+  "schemaVersion": 1,
+  "benchmarkVersion": "tom-baseline-v2",
+  "build": "0.4.0",
+  "started": "2026-09-05T22:43:21.525Z",
+  "caseSelection": "all",
+  "repetitions": 1,
+  "config": {
+    "context": 4096,
+    "threads": 4,
+    "kvK": "q8_0",
+    "kvV": "q8_0",
+    "gpuLayers": 0,
+    "seedStart": 42
+  },
+  "hardware": {
+    "platform": "win32",
+    "arch": "x64",
+    "osRelease": "10.0.26100",
+    "cpu": "Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz",
+    "logicalProcessors": 8,
+    "ramBytes": 34276474880
+  },
+  "runtime": {
+    "revision": "b10809 / 5266f24da",
+    "sha256": "cb29f66008d4d73cce17cab2c2569ab318eb244b0b2ca2a15024b44d90dfcd3f",
+    "node": "v24.19.0"
+  },
+  "model": {
+    "id": "gemma-4-e2b",
+    "sha256": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634",
+    "projectorSha256": "021059cce659fe7f9170d5599761d7bbaf644b798dab9503aca30dc43e6beb14"
+  },
+  "sourceHash": "bfdf869d5d08c7ca58be149111dcd755de9f3961d50f10e9dfaca0438ac6f835",
+  "sourceFiles": [
+    {
+      "path": "src/browser.mjs",
+      "sha256": "a2ae8b790364151cbaaaf92373a755c6d62b659bd9403721b8ee35ad81edf18e"
+    },
+    {
+      "path": "src/capabilities.mjs",
+      "sha256": "11f0b0961d67e5aa168198c65d79c1356ea3c10a2ab20bf5e687e2fe3b05d5ee"
+    },
+    {
+      "path": "src/context.mjs",
+      "sha256": "b400ab77bb89dfa3ec5e4e46eb2610de2e613521f2be4f2efad68ee07c7b43ae"
+    },
+    {
+      "path": "src/dispatch.mjs",
+      "sha256": "5e6652aecaa7699d923163d2d7d5c72a51b58c6103f1255d0d749eb5b74d26ed"
+    },
+    {
+      "path": "src/engine.mjs",
+      "sha256": "2e8bc8d8112174e99f9ce63afec1ad4560a0dcdbb4cf615a9ba622f709aa6b98"
+    },
+    {
+      "path": "src/evidence.mjs",
+      "sha256": "7d902706e46108b0bfbce5f991f26fb66837258b3ef47344a538e53add33d5f3"
+    },
+    {
+      "path": "src/portable-read.mjs",
+      "sha256": "ca6310b13c4ff8ee38a9a485ce9b2657f9dc05dccd99ec3f80595697e4c103b1"
+    },
+    {
+      "path": "src/qualification.mjs",
+      "sha256": "d62ee9e15dd5aec20794879cd6ae2ec0f20d9d45387ecd8e927bf73384ca3383"
+    },
+    {
+      "path": "src/recall.mjs",
+      "sha256": "1ac7f8c89a7facbb8e395713cafc5af11c50c887fbe921684b78015da61c1afe"
+    },
+    {
+      "path": "src/relevance.mjs",
+      "sha256": "42345044ffa61a2dd1eb96dcf0a46efca6bdfad56bfba4bf6e963b836668aa86"
+    },
+    {
+      "path": "src/runtime.mjs",
+      "sha256": "befc94e88accb213c07f2019d57b57158b80c50633c11df2552edd3bd3d0c621"
+    },
+    {
+      "path": "src/server.mjs",
+      "sha256": "4fe0b5b4a164124491067819caec836d7677fefadad0a89b861b75cccb2ab10d"
+    },
+    {
+      "path": "src/store.mjs",
+      "sha256": "7cec1dc8bd82d4a2bfe2677e38bf221aefa30423fd46589913508723286e96a4"
+    },
+    {
+      "path": "src/tools.mjs",
+      "sha256": "4a4e6c8e2e184bd8086f43c883359bdb078a3c75077ae0c4fd9ce9c0a0db9d1d"
+    },
+    {
+      "path": "public/app.js",
+      "sha256": "52f8732a6eeed5e09f654c721ae4bf9706a386a8035c867e9544a3745e5e2b2f"
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "bbc9182ea237e71f262116587b733087c1f4d535d7b245172c946fc131c1febb"
+    },
+    {
+      "path": "public/kernel.js",
+      "sha256": "2d1954dd03106ea5a3fbe6f0c87887f6bbe95ec27114de8a5724c2d60a9ec6e3"
+    },
+    {
+      "path": "public/mark.svg",
+      "sha256": "ff72b3e9567b3acecddf877ac9e08a84cefaf1ccf96456d74e98e800dc6ade00"
+    },
+    {
+      "path": "public/styles.css",
+      "sha256": "f687fe8c0787edf23fde99f641a21f72a2bcb088acc0b933e7116ed19f3d11ed"
+    },
+    {
+      "path": "config/model-catalog.json",
+      "sha256": "209f8d37b3260cdcc597cfef55983b594291e8483b1fefbbd3ab97f371d5d4f6"
+    },
+    {
+      "path": "config/product.json",
+      "sha256": "c4b5f84f3569c82e8548f05409b0c75ea2cce11a839727e30e5bb29246832904"
+    },
+    {
+      "path": "config/qualification-policy.json",
+      "sha256": "8ea500cdec7678fd13dc863c81d6aa76c5c735ee0f5e1963ea716c3a77ef44ff"
+    },
+    {
+      "path": "config/runtime-components.json",
+      "sha256": "21ff3c9bc7aba97cf46a0678a89125cf37215b915c0718ebf23e86d0b6ac78b2"
+    },
+    {
+      "path": "config/runtime.json",
+      "sha256": "39d06acdafc179e3cef6ff9bb84170cb67070d7146a3eb23166d524956ea587b"
+    },
+    {
+      "path": "config/vision-probe.png",
+      "sha256": "469cdb55e0410227837c863e430bceafcafd3dfe13ab156a0286d09d576ebdc5"
+    },
+    {
+      "path": "tests/context.test.mjs",
+      "sha256": "5d5187f243837173756b6a3095ad9297452e097602dccd6c445a9d83d99e76b3"
+    },
+    {
+      "path": "tests/core.test.mjs",
+      "sha256": "3541adb73cce74ed93bc8babd813122b1650831929a85a9dc1940096170b7953"
+    },
+    {
+      "path": "tests/dispatch.test.mjs",
+      "sha256": "383feb5d7ecb90c80835865249ef03cde2da6a5ec9876c52aa66627bea59d1d1"
+    },
+    {
+      "path": "tests/evidence.test.mjs",
+      "sha256": "fc3d3f473731cccc131394538b4e55f023617272e844f3851cec140d8deb6aaf"
+    },
+    {
+      "path": "tests/extension.test.mjs",
+      "sha256": "8aea69154ce560f2c37e98c8197c902069c8b8df8d5e5146c04dfbcbd0bc850e"
+    },
+    {
+      "path": "tests/portable.test.mjs",
+      "sha256": "7846f1a4e02333b6a2e8f44ee68dc568ac39d27cb4ae058f18fbea0b3596c57d"
+    },
+    {
+      "path": "tests/qualification.test.mjs",
+      "sha256": "f3e9a746854941fcfce4c5b40b3329e91b962f26612e4a599ae6f1ca6bfdf58f"
+    },
+    {
+      "path": "tests/runtime-dispatch.test.mjs",
+      "sha256": "9c887c2f3d68d30be03a6ab5878aab5480a5762eca23f4d960166efbd4fddd79"
+    },
+    {
+      "path": "scripts/Installer.cs",
+      "sha256": "7da87418cefffb6303c169d8a6db0f42865418a3ffded6e26b21b4d7fa380ec3"
+    },
+    {
+      "path": "scripts/Launcher.cs",
+      "sha256": "9b7cbf12cb8973e3b58a5d296190577ea62448d4ffd5b311d669d2701b0864bd"
+    },
+    {
+      "path": "scripts/api-check.mjs",
+      "sha256": "850d5b6d55ec95f7c620de725b73a916b166976bd85f980c62f44a07d3dc734b"
+    },
+    {
+      "path": "scripts/benchmark.mjs",
+      "sha256": "e2cfc7e9df01c1d48bc898c38826bd7ce0561f44cbf3888ba14519cb22156969"
+    },
+    {
+      "path": "scripts/browser-route-check.mjs",
+      "sha256": "1a2c4a5f762b582e6bceb65a979b203f95380e4a2f5bede0169916ca07f43358"
+    },
+    {
+      "path": "scripts/build-icon.mjs",
+      "sha256": "ec9b33010fe18f4d976fca38d7904cf8a6ed02007cbae316aada8059c707ae2c"
+    },
+    {
+      "path": "scripts/build-launcher.ps1",
+      "sha256": "604b34b7cdfe5b0bf5665721c5d9a891f16f8ce3ed4ccabb8447986b9e772c37"
+    },
+    {
+      "path": "scripts/build-offline.ps1",
+      "sha256": "23bbf6a45f83356eae9d40e9ce55460fc319110ffc551569876152c67477d870"
+    },
+    {
+      "path": "scripts/catalog-fetch.mjs",
+      "sha256": "ef58a58daba42a9102d9c9ba5610a3cbd3059095a0fe9c089a1f98c542eba878"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "sha256": "340fb193f283f91aea03e8b33cd91cb5428334688593402d635fc34c814c6a12"
+    },
+    {
+      "path": "scripts/control.mjs",
+      "sha256": "0deaa95f4f04a2f3de2c5d1a8c727651d175d0f199fe682d8979f1b6a035763f"
+    },
+    {
+      "path": "scripts/dispatch-probe.mjs",
+      "sha256": "caa18bc6e2846201eb49616f91a8082d1123f6062714d5e9300470869e7c6109"
+    },
+    {
+      "path": "scripts/fresh-install-check.mjs",
+      "sha256": "8f0229dc8b43999fd4eb4a4eb73f051cd326145d2a3daae5d7fba7ff8012d50d"
+    },
+    {
+      "path": "scripts/human-smoke.mjs",
+      "sha256": "8b76b4f89c8acd8191e15379efe31e5c3c00778b14d1452de688bf86588e9727"
+    },
+    {
+      "path": "scripts/integrate-windows.ps1",
+      "sha256": "e6978ed17b97bc5f9329ea2f191afa1694530fa4352fa56e0c20e0aaf50cebbc"
+    },
+    {
+      "path": "scripts/kv-trial.mjs",
+      "sha256": "fae1bea7ef8d005b627b3b7fe7b30ba053bd5ab7a8ce0f6847c280680b23052a"
+    },
+    {
+      "path": "scripts/long-task-check.mjs",
+      "sha256": "e2a0683c2c9e17fafae6bbd530bdf9127ab93a4c75a15184cfac8687aa0f75a7"
+    },
+    {
+      "path": "scripts/native-layout-check.ps1",
+      "sha256": "72398099a225c27fddb2b56dcd0e6d8c5ddf3256686f0c1c965cb80772b14aa5"
+    },
+    {
+      "path": "scripts/package-dev.ps1",
+      "sha256": "3e75385b73728e9ac55f2cc0e39fb95533c84fbfd2d7093da2c29e66684aae94"
+    },
+    {
+      "path": "scripts/profile-v02.ps1",
+      "sha256": "a58b78659dff8a729ea8e137489933a147b5d6bfe8808ca777c5f432283b4d3c"
+    },
+    {
+      "path": "scripts/recovery-check.mjs",
+      "sha256": "2d5957394890f32ab8026b88c07b8525a7aa626a0986105c87f6dda11e073bef"
+    },
+    {
+      "path": "scripts/report-benchmark.mjs",
+      "sha256": "b6f61e36c18a0e1d05050076a7d1e0b4c854acbf157a78254bff42156bcd3191"
+    },
+    {
+      "path": "scripts/smoke.mjs",
+      "sha256": "8067f00b4cd298c8aa7e392b61cba8a1ba6d5952b395323afdd1a3676185eb16"
+    },
+    {
+      "path": "scripts/system-check.mjs",
+      "sha256": "cda20e4748734b0bcd58fdd06fddb545e57749deeca89acf2480497e7b7490eb"
+    },
+    {
+      "path": "scripts/ui-check.mjs",
+      "sha256": "cd94e75f7dcabb9c4301750b2f0061e6bc73535dc01fa7b062b47c5be86af897"
+    },
+    {
+      "path": "scripts/ui-v02-check.mjs",
+      "sha256": "94a3da9267f6fdbdd66d667b50467733b2b1270676edd51734dafeb506268da9"
+    },
+    {
+      "path": "scripts/ui-v03-check.mjs",
+      "sha256": "38cbe68b70c4ec754b326d4ff7c18b98054548389aa654b489f081a183c3a0fd"
+    },
+    {
+      "path": "scripts/ui-v03-inspect.mjs",
+      "sha256": "6442c080a1f63dbfc5fe0248495944c355a266270dcb7622bae06d45c54a73f1"
+    },
+    {
+      "path": "scripts/ui-v04-check.mjs",
+      "sha256": "020cec57472b3ba63b114d043fff6d9165d7f3811ee4441b9495338970721c35"
+    },
+    {
+      "path": "scripts/verify-webpage.mjs",
+      "sha256": "188062baffb823af8e866ccc153d4055e5d5d5b494bda7cd96ba7cac279a8b0f"
+    }
+  ],
+  "results": [
+    {
+      "case": "file",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "complete",
+      "passed": true,
+      "assertions": {
+        "passed": true
+      },
+      "wallMs": 40842,
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 2,
+        "usedTokens": 49,
+        "usedMs": 40834,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:43:21.530Z"
+      },
+      "compactions": 0,
+      "toolErrors": 0,
+      "completionRejections": 0,
+      "minimumAvailableBytes": 23672778752,
+      "peakSupervisorRss": 119599104,
+      "responses": [
+        {
+          "usage": {
+            "completion_tokens": 30,
+            "prompt_tokens": 658,
+            "total_tokens": 688,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 14815,
+            "elapsedMs": 17083
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 19,
+            "prompt_tokens": 870,
+            "total_tokens": 889,
+            "prompt_tokens_details": {
+              "cached_tokens": 580
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 7626,
+            "elapsedMs": 9014
+          }
+        }
+      ],
+      "answer": "File receipt.txt created with content: CEDAR-17."
+    },
+    {
+      "case": "webpage",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "error",
+      "passed": false,
+      "assertions": {
+        "passed": false,
+        "error": "Task did not complete"
+      },
+      "wallMs": 591017,
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 6,
+        "usedTokens": 3757,
+        "usedMs": 591001,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:44:02.376Z"
+      },
+      "compactions": 4,
+      "toolErrors": 0,
+      "completionRejections": 0,
+      "minimumAvailableBytes": 23463194624,
+      "peakSupervisorRss": 75415552,
+      "responses": [
+        {
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 739,
+            "total_tokens": 762,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 17007,
+            "elapsedMs": 18690
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 1775,
+            "total_tokens": 1798,
+            "prompt_tokens_details": {
+              "cached_tokens": 618
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 30542,
+            "elapsedMs": 32302
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 1893,
+            "total_tokens": 1916,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 47488,
+            "elapsedMs": 49278
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 1160,
+            "prompt_tokens": 1791,
+            "total_tokens": 2951,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 45171,
+            "elapsedMs": 143205
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 1144,
+            "prompt_tokens": 2260,
+            "total_tokens": 3404,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 58056,
+            "elapsedMs": 154633
+          }
+        }
+      ],
+      "answer": ""
+    },
+    {
+      "case": "followup",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "skipped",
+      "passed": false,
+      "assertions": {
+        "passed": false,
+        "error": "The preceding webpage task did not complete."
+      },
+      "wallMs": 0,
+      "compactions": 0
+    },
+    {
+      "case": "browser",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "complete",
+      "passed": true,
+      "assertions": {
+        "passed": true,
+        "successfulReads": 2
+      },
+      "wallMs": 62247,
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 3,
+        "usedTokens": 244,
+        "usedMs": 62241,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:53:53.398Z"
+      },
+      "compactions": 0,
+      "toolErrors": 0,
+      "completionRejections": 0,
+      "minimumAvailableBytes": 23472156672,
+      "peakSupervisorRss": 77651968,
+      "responses": [
+        {
+          "usage": {
+            "completion_tokens": 72,
+            "prompt_tokens": 805,
+            "total_tokens": 877,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 17883,
+            "elapsedMs": 23391
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 72,
+            "prompt_tokens": 1054,
+            "total_tokens": 1126,
+            "prompt_tokens_details": {
+              "cached_tokens": 554
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 12946,
+            "elapsedMs": 18431
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 100,
+            "prompt_tokens": 1256,
+            "total_tokens": 1356,
+            "prompt_tokens_details": {
+              "cached_tokens": 889
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 9573,
+            "elapsedMs": 17354
+          }
+        }
+      ],
+      "answer": "Page 'one' (http://127.0.0.1:53620/one) shows the opening time is 09:30 and the booking code is CEDAR-17. Page 'two' (http://127.0.0.1:53620/two) shows the opening time is 11:45 and the booking code is BIRCH-86."
+    },
+    {
+      "case": "missing-page",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "blocked",
+      "passed": true,
+      "assertions": {
+        "passed": true,
+        "failureWasVisible": true
+      },
+      "wallMs": 34360,
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 2,
+        "usedTokens": 91,
+        "usedMs": 34356,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:54:55.647Z"
+      },
+      "compactions": 0,
+      "toolErrors": 1,
+      "completionRejections": 0,
+      "minimumAvailableBytes": 23480602624,
+      "peakSupervisorRss": 77656064,
+      "responses": [
+        {
+          "usage": {
+            "completion_tokens": 53,
+            "prompt_tokens": 743,
+            "total_tokens": 796,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 16463,
+            "elapsedMs": 20529
+          }
+        }
+      ],
+      "answer": "The requested URL returned an HTTP 404 error, meaning the service is not accessible or the page does not exist, so I cannot determine its opening time."
+    },
+    {
+      "case": "vision",
+      "seed": 42,
+      "passed": true,
+      "answer": "The two shapes are a red square and a blue circle. The large text is \"TOM 42\".",
+      "wallMs": 29954,
+      "taskStatus": "complete",
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 1,
+        "usedTokens": 28,
+        "usedMs": 29950,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:55:30.011Z"
+      }
+    },
+    {
+      "case": "live-web",
+      "seed": 42,
+      "context": 4096,
+      "taskStatus": "complete",
+      "passed": true,
+      "assertions": {
+        "passed": true,
+        "searches": 1,
+        "readUrls": [
+          "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+          "https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem"
+        ],
+        "evaluatedSourceContents": true
+      },
+      "wallMs": 211250,
+      "budget": {
+        "maxSteps": 16,
+        "maxTokens": 10000,
+        "maxActiveMs": 600000,
+        "maxResponseTokens": 2048,
+        "usedSteps": 4,
+        "usedTokens": 314,
+        "usedMs": 211244,
+        "pendingTokens": 0,
+        "created": "2026-09-05T22:55:59.967Z"
+      },
+      "compactions": 2,
+      "toolErrors": 0,
+      "completionRejections": 0,
+      "minimumAvailableBytes": 22659440640,
+      "peakSupervisorRss": 78028800,
+      "responses": [
+        {
+          "usage": {
+            "completion_tokens": 43,
+            "prompt_tokens": 718,
+            "total_tokens": 761,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 16105,
+            "elapsedMs": 19306
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 54,
+            "prompt_tokens": 1187,
+            "total_tokens": 1241,
+            "prompt_tokens_details": {
+              "cached_tokens": 598
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 14925,
+            "elapsedMs": 19116
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 54,
+            "prompt_tokens": 2733,
+            "total_tokens": 2787,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 72271,
+            "elapsedMs": 76756
+          }
+        },
+        {
+          "usage": {
+            "completion_tokens": 163,
+            "prompt_tokens": 2570,
+            "total_tokens": 2733,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "finish": "stop",
+          "dispatchVersion": "tom-dispatch-v1",
+          "timings": {
+            "firstTokenMs": 66958,
+            "elapsedMs": 80462
+          }
+        }
+      ],
+      "answer": "To save a checklist array to `localStorage`, first convert the array to a JSON string using `JSON.stringify()`. Then, use `localStorage.setItem(key, jsonString)` to store it. For example, `localStorage.setItem('checklist', JSON.stringify(myArray))`. To restore it, retrieve the string using `localStorage.getItem('checklist')` and parse it back into an array using `JSON.parse()`. Finally, you can use `JSON.parse(localStorage.getItem('checklist'))` to get the original array. \n\nSources: \n1. MDN Web Docs: Window: localStorage property (for general localStorage usage).\n2. MDN Web Docs: Storage: setItem() method (for the setItem function).\n\nSources read:\n- https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage\n- https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem"
+    }
+  ],
+  "finished": "2026-09-05T22:59:31.541Z",
+  "total": 7,
+  "passed": 5,
+  "failed": 2,
+  "limitations": [
+    "One physical host; this is a build baseline, not fleet qualification.",
+    "Minimum free memory includes other running applications; supervisor RSS excludes browser/model processes.",
+    "Live search results and network timing are not deterministic.",
+    "Seeds and build hashes are recorded; exact CPU floating-point output can differ across builds/hardware."
+  ],
+  "classification": "preliminary baseline"
+}

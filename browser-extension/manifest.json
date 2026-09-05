@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Ask Tom",
+  "version": "0.2.0",
+  "description": "Ask your local Tom assistant about selected text, optionally with a screenshot.",
+  "permissions": ["contextMenus", "storage", "activeTab"],
+  "host_permissions": ["http://127.0.0.1:4317/*"],
+  "background": {"service_worker": "background.js"},
+  "options_page": "options.html",
+  "action": {"default_title": "Connect Ask Tom"}
+}
