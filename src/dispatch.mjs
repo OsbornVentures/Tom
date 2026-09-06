@@ -32,7 +32,8 @@ export function buildDispatchGrammar(options={}){
    roots.push('file-read');rules.push('source-file ::= ('+options.unreadFiles.map(f=>lit(JSON.stringify(f))).join(' | ')+') ws');
    rules.push('file-read ::= '+wrap('shell',fields([['summary','short-string'],['program',lit(JSON.stringify('cat'))+' ws'],['args',lit('[')+' ws source-file '+lit(']')+' ws']])));
  }else if(options.browserStage==='search'){
-   roots.push('browser-search');rules.push('browser-search ::= '+wrap('shell',browserBody('search','nonempty')));
+   const query=options.searchQuery?lit(JSON.stringify(options.searchQuery)):'nonempty';
+   roots.push('browser-search');rules.push('browser-search ::= '+wrap('shell',browserBody('search',query)));
  }else if(options.browserStage==='read'){
    if(options.urls?.length){roots.push('browser-read');rules.push('source-url ::= ('+options.urls.map(u=>lit(JSON.stringify(u))).join(' | ')+') ws');rules.push('browser-read ::= '+wrap('shell',browserBody('read','source-url')));}
  }else if(!options.answerOnly){
@@ -41,7 +42,7 @@ export function buildDispatchGrammar(options={}){
    rules.push('replace ::= '+wrap('write',fields([['summary','short-string'],['path',destination],['expectedHash',expectedHash],['copyFrom','nonempty'],['sourceHash','hash'],['replacements','replacements']])));
  }
  if(options.allowAnswer!==false){roots.push('answer');rules.push('answer ::= '+lit('{"answer":')+' ws nonempty '+lit('}')+' ws');}
- roots.push('blocked');rules.push('blocked ::= '+lit('{"blocked":')+' ws nonempty '+lit('}')+' ws');
+ if(options.allowBlocked!==false||!roots.length){roots.push('blocked');rules.push('blocked ::= '+lit('{"blocked":')+' ws nonempty '+lit('}')+' ws');}
  const grammar='root ::= ws ('+roots.join(' | ')+')\n'+rules.join('\n')+String.raw`
 ws ::= [ \t\r\n]{0,2}
 char ::= [^"\\\x00-\x1F] | "\\" (["\\/bfnrt] | "u" [a-fA-F0-9]{4})
@@ -75,6 +76,7 @@ export function decodeDispatch(text,options={}){
  if(key==='answer'||key==='blocked'){
    if(typeof object[key]!=='string'||!object[key].trim())throw new Error('The structured reply was empty.');
    if(key==='answer'&&options.allowAnswer===false)throw new Error('A reply arrived before the required task evidence.');
+   if(key==='blocked'&&options.allowBlocked===false)throw new Error('A blocker arrived before attempting the available browser action.');
    return {role:'assistant',content:object[key],...(key==='blocked'?{blocked:true}:{})};
  }
  const call=validateTool({name:key,arguments:object[key]});

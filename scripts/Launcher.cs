@@ -88,7 +88,7 @@ internal sealed class TomResident : ApplicationContext {
   }
   void Safe(Action action){try{action();}catch(Exception e){MessageBox.Show(e.Message,"Tom");}}
   void ShowAsk(string selection){if(popup!=null&&!popup.IsDisposed){popup.Activate();return;}popup=new AskWindow(selection,null);popup.Show();popup.Activate();}
-  void Status(bool running){try{File.WriteAllText(Path.Combine(TomLauncher.Root,".state","native-status.json"),TomLauncher.Json.Serialize(new {pid=Process.GetCurrentProcess().Id,running=running,hotkeyRegistered=running&&hotkey.Registered,shortcut="Ctrl Alt T",version="0.4.0"}));}catch{}}
+  void Status(bool running){try{File.WriteAllText(Path.Combine(TomLauncher.Root,".state","native-status.json"),TomLauncher.Json.Serialize(new {pid=Process.GetCurrentProcess().Id,running=running,hotkeyRegistered=running&&hotkey.Registered,shortcut="Ctrl Alt T",version="0.5.0"}));}catch{}}
   protected override void ExitThreadCore(){Status(false);hotkey.Dispose();tray.Visible=false;tray.Dispose();icon.Dispose();base.ExitThreadCore();}
   [DllImport("user32.dll")] static extern bool DestroyIcon(IntPtr handle);
   static Icon KernelIcon(){using(Bitmap b=new Bitmap(32,32)){using(Graphics g=Graphics.FromImage(b)){g.Clear(Color.Transparent);using(Pen p=new Pen(TomLauncher.Emerald,2)){g.DrawRectangle(p,4,4,24,24);}using(Brush brush=new SolidBrush(TomLauncher.Emerald)){g.FillRectangle(brush,10,10,4,4);g.FillRectangle(brush,18,10,4,4);g.FillRectangle(brush,10,18,4,4);g.FillRectangle(brush,18,18,4,4);}}IntPtr h=b.GetHicon();Icon copy=(Icon)Icon.FromHandle(h).Clone();DestroyIcon(h);return copy;}}

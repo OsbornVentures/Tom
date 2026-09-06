@@ -1,0 +1,231 @@
+{
+  "version": "0.5.0",
+  "recorded": "2026-09-06T00:47:12.110Z",
+  "classification": "unsigned development package; one physical host",
+  "setup": {
+    "bytes": 27648,
+    "sha256": "38a02f9da2a3c3c87acc4999b9e9cfe1390dd5ea7449b09879f31705a7865769"
+  },
+  "launcher": {
+    "bytes": 32768,
+    "sha256": "0973ef125c4cd486a811bf21efd69f011edc31dae59f9816bb161666c38532c5"
+  },
+  "manifestSha256": "bd3f38122e1db6a4909537cb3c7ea7fa5bef2d518c210bbcbfa42438827a6bd4",
+  "payloadBytes": 4487508024,
+  "payloadFiles": 213,
+  "bytesByGroup": {
+    "harnessUiDocsNotices": 750101,
+    "modelWeights": 3349516256,
+    "visionProjector": 986833664,
+    "nodeRuntime": 92825416,
+    "playwrightCore": 13442086,
+    "nativeRuntime": 44140501
+  },
+  "buildChecks": {
+    "javascriptFiles": 51,
+    "tests": 58,
+    "passed": 58,
+    "failed": 0,
+    "nativeCompilation": true
+  },
+  "installation": {
+    "passed": true,
+    "verifiedFiles": 213,
+    "automaticCheck": true,
+    "minimalWindowsPath": true,
+    "networkDisconnected": false,
+    "installMode": "portable test; no Windows-menu registration",
+    "productionFileMismatches": []
+  },
+  "firstRun": {
+    "version": 1,
+    "started": "2026-09-06T00:44:08.908Z",
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz",
+    "ramGiB": 31.922454833984375,
+    "threads": 4,
+    "model": "Gemma 4 E2B",
+    "modelHash": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634",
+    "passed": true,
+    "contexts": [
+      4096
+    ],
+    "checks": [
+      {
+        "name": "decode",
+        "passed": true
+      },
+      {
+        "name": "tool-format",
+        "passed": true
+      },
+      {
+        "name": "recall-4096",
+        "passed": true,
+        "promptTokens": 2874,
+        "elapsedMs": 79843,
+        "firstTokenMs": 78876
+      },
+      {
+        "name": "vision",
+        "passed": true
+      }
+    ],
+    "metrics": {
+      "loadMs": 16641,
+      "elapsedMs": 10045,
+      "firstTokenMs": 803,
+      "decodeTps": 14.173571740078499,
+      "generatedTokens": 131,
+      "minimumFreeGiB": 21.17354965209961
+    },
+    "vision": true,
+    "reason": "Basic thresholds passed. Larger packages still need their own local trial.",
+    "finished": "2026-09-06T00:46:24.355Z"
+  },
+  "offers": [
+    {
+      "id": "gemma-4-e4b",
+      "name": "Gemma 4 E4B",
+      "repo": "google/gemma-4-E4B-it-qat-q4_0-gguf",
+      "revision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c",
+      "workRatio": 2,
+      "model": {
+        "filename": "gemma-4-E4B_q4_0-it.gguf",
+        "bytes": 5154941280,
+        "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+        "path": "models/gemma-4-E4B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-E4B-it-mmproj.gguf",
+        "bytes": 991552256,
+        "sha256": "7498a37cb619e55f2fcf87eb931f56e99389ed6d432e4c5c66110694c0d65578",
+        "path": "models/gemma-4-E4B-it-mmproj.gguf",
+        "modelRevision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c"
+      },
+      "minAvailableGiB": 8,
+      "source": "https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf",
+      "eligible": true,
+      "predictedDecodeTps": 7.1,
+      "downloadBytes": 6146493536,
+      "reasons": [],
+      "reason": "Eligible for a download and local trial. Activation requires a pass."
+    },
+    {
+      "id": "gemma-4-12b",
+      "name": "Gemma 4 12B",
+      "repo": "google/gemma-4-12B-it-qat-q4_0-gguf",
+      "revision": "29d097773436b69ff9feafd636ab4cf873786537",
+      "workRatio": 6,
+      "model": {
+        "filename": "gemma-4-12b-it-qat-q4_0.gguf",
+        "bytes": 6975879296,
+        "sha256": "93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b",
+        "path": "models/gemma-4-12b-it-qat-q4_0.gguf"
+      },
+      "vision": {
+        "filename": "mmproj-gemma-4-12b-it-qat-q4_0.gguf",
+        "bytes": 175115616,
+        "sha256": "cb018338a7538a9814d994bfe54644c71eb7ed54e31eae2f721e45fd3c260da7",
+        "path": "models/mmproj-gemma-4-12b-it-qat-q4_0.gguf",
+        "modelRevision": "29d097773436b69ff9feafd636ab4cf873786537"
+      },
+      "minAvailableGiB": 9,
+      "source": "https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf",
+      "eligible": false,
+      "predictedDecodeTps": 2.4,
+      "downloadBytes": 7150994912,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ],
+      "reason": "Baseline speed estimate is below the trial threshold"
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "name": "Gemma 4 26B A4B",
+      "repo": "google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
+      "revision": "d1c082be9cf3c8a514acf63b8761f4b41935842e",
+      "workRatio": 3.5,
+      "model": {
+        "filename": "gemma-4-26B_q4_0-it.gguf",
+        "bytes": 14439363584,
+        "sha256": "3eca3b8f6d7baf218a7dd6bba5fb59a56ee25fe2d567b6f5f589b4f697eca51d",
+        "path": "models/gemma-4-26B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-26B-it-mmproj.gguf",
+        "bytes": 1194828160,
+        "sha256": "a359953a076b877db30c31dbbb4c6d93b4a6e017ee5db5784247e4d4c0dd4f3b",
+        "path": "models/gemma-4-26B-it-mmproj.gguf",
+        "modelRevision": "d1c082be9cf3c8a514acf63b8761f4b41935842e"
+      },
+      "minAvailableGiB": 17,
+      "source": "https://huggingface.co/google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
+      "eligible": false,
+      "predictedDecodeTps": 4,
+      "downloadBytes": 15634191744,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ],
+      "reason": "Baseline speed estimate is below the trial threshold"
+    },
+    {
+      "id": "gemma-4-31b",
+      "name": "Gemma 4 31B",
+      "repo": "google/gemma-4-31B-it-qat-q4_0-gguf",
+      "revision": "59dde24573e7e61570dba08b18a2e1fe246955ed",
+      "workRatio": 15.5,
+      "model": {
+        "filename": "gemma-4-31B_q4_0-it.gguf",
+        "bytes": 17651001568,
+        "sha256": "179cfb99212709597eae5929112cfca677e1bbf566178b479ae1da0c4772874b",
+        "path": "models/gemma-4-31B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-31B-it-mmproj.gguf",
+        "bytes": 1200726368,
+        "sha256": "6bd60bdb958548b4093196d38744b0f2290c12503a3fddd7486bffa9c5eb07a4",
+        "path": "models/gemma-4-31B-it-mmproj.gguf",
+        "modelRevision": "59dde24573e7e61570dba08b18a2e1fe246955ed"
+      },
+      "minAvailableGiB": 20,
+      "source": "https://huggingface.co/google/gemma-4-31B-it-qat-q4_0-gguf",
+      "eligible": false,
+      "predictedDecodeTps": 0.9,
+      "downloadBytes": 18851727936,
+      "reasons": [
+        "Baseline speed estimate is below the trial threshold"
+      ],
+      "reason": "Baseline speed estimate is below the trial threshold"
+    }
+  ],
+  "upgradesDownloaded": false,
+  "ui": {
+    "passed": true,
+    "syntheticEvents": true,
+    "modelDriven": false,
+    "researchEndpoint": true,
+    "collapsed": true,
+    "nestedAction": true,
+    "visibleBlocked": true,
+    "redErrors": true,
+    "helpStates": 9,
+    "plainMemoryExplanation": true,
+    "newFavicon": true,
+    "browserHandoff": true,
+    "activeFrames": 15,
+    "narrowOverflow": false,
+    "reducedMotion": true,
+    "errors": []
+  },
+  "benchmarkSourceHash": "ac2f8e79733e957257e1d0b51bc0ae37a6f94fb9ac2602fa6d0b618cc5525127",
+  "postBenchmarkSourceChanges": [
+    {
+      "path": "scripts/benchmark.mjs",
+      "baselineSha256": "6ae115e03b4fbcbc4373aa786f7c3edcf7b0c4302ca8c70b359bdc8ee22c5c22",
+      "packagedSourceSha256": "a9f6e645c0748b59d695f50e43b64c6e4e44dc0178c59e0c3f12b867f38baae2"
+    }
+  ],
+  "postBenchmarkNote": "Only the runner core selector changed to exclude both internet-dependent case groups. Final production harness/UI/model configuration are unchanged. This package validation report was generated after packaging and is not part of the payload."
+}

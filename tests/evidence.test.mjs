@@ -4,7 +4,7 @@ import {requestContract,evidenceState,verifyCompletion} from '../src/evidence.mj
 import {relevance} from '../src/relevance.mjs';
 const contract=text=>requestContract([{role:'user',content:text}]);
 const read=(url,content,status=200)=>({status:'complete',body:{name:'shell',arguments:{program:'tom-browser',args:['--action','read','--url',url]}},result:{exitCode:0,output:JSON.stringify({url,content,httpStatus:status,title:'MDN'})}});
-const search={status:'complete',body:{name:'shell',arguments:{program:'tom-browser',args:[]}},result:{exitCode:0,output:JSON.stringify({httpStatus:200,query:'localStorage setItem MDN',results:[{url:'https://example.test/storage',title:'localStorage setItem'}]})}};
+const search={status:'complete',body:{name:'shell',arguments:{program:'tom-browser',args:[]}},result:{exitCode:0,output:JSON.stringify({httpStatus:200,query:'localStorage setItem MDN',results:[{url:'https://example.test/storage',title:'MDN localStorage setItem'}]})}};
 test('unrelated search pages cannot satisfy research evidence',()=>{
  const c=contract('Search the web for MDN localStorage setItem.');
  assert.equal(relevance('MDN localStorage setItem',{title:'MDN Web Docs',content:'The home of general web documentation.'}).passed,false);

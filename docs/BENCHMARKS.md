@@ -11,7 +11,9 @@ runtime/node.exe scripts/check.mjs
 runtime/node.exe scripts/benchmark.mjs --case all --repetitions 2 --context 4096
 ```
 
-`core` excludes live internet search. Individual selections are `file`, `webpage` (including a follow-up), `browser`, `missing-page`, `vision`, and `live-web`. Each run has an isolated directory under `.state/benchmarks`. Default per-task limits are 16 model calls, 10,000 generated tokens, ten active minutes, and at most 2,048 tokens per response. The harness can allocate less to fit context. Command review time is excluded from the active budget; wall time includes it. Tests approve only their named local fixture reads; unexpected commands are declined.
+Individual selections are `file`, `webpage` (including a follow-up), `browser`, `missing-page`, `vision`, `live-web`, and `weather` (including a pronoun-only follow-up). `browser-regression` runs two-page browsing, a missing page, both weather requests, and live documentation research. `core` excludes live internet cases. Each run has an isolated directory under `.state/benchmarks`. Default per-task limits are 16 model calls, 10,000 generated tokens, ten active minutes, and at most 2,048 tokens per response. The harness can allocate less to fit context. Command review time is excluded from the active budget; wall time includes it. Tests approve only their named local fixture reads; unexpected commands are declined.
+
+Version `tom-baseline-v3` adds conversational weather/follow-up cases. They use the default DuckDuckGo route; the MDN comparison retains Bing. Each final run records the selected browser/provider per ordinary case. The earlier 0.5 development candidate used Bing for weather and lacks this field; its raw trace records the route. Do not combine different test versions, provider choices or changing source snapshots into one success percentage.
 
 The runner uses production Engine, Runtime, SQLite and shell/write implementations. It records source hashes, model/projector identity, runtime revision, CPU/RAM, seed, context/KV settings, task status, assertions, wall time, generated/input/cached token counts, time to first output, compactions, errors and budget use. SQLite contains the full synthetic trace. The reported supervisor RSS excludes the model and browser. Available system memory is not a process memory measurement. Per-process peak working set, page faults and energy measurements remain needed for hardware qualification.
 
@@ -26,6 +28,8 @@ The runner uses production Engine, Runtime, SQLite and shell/write implementatio
 | Missing source | Observe HTTP 404 and report failure; never complete with an invented opening time |
 | Vision | Recognize the local fixture's red square, blue circle and TOM42 text using the matching projector |
 | Live research | Actual search; two distinct relevant MDN API documents; save/restore explanation using serialization/parsing; citations to read sources |
+| Conversational weather | Actual search for the requested city and region without asking a second time; matching source content and an answer about that place |
+| Weather follow-up | “Search the web for it” preserves the earlier user subject; never inherit an unrelated place from a model answer or provider result |
 
 The controlled browser fixture tests transport, evidence and injection resistance. It does not stand in for a live search. A provider challenge, rate limit, irrelevant results or no internet is a failed live task even when Tom reports that failure correctly. Report **task success** and **honest failure** separately. No CAPTCHAs are solved by the test.
 

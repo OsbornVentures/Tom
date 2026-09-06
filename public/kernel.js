@@ -1,10 +1,22 @@
 // One small shared timer; slow idle breathing, distinct activity glyphs, <=15fps.
 let state='ready',timer=null,frames=0,mode='idle';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-const phases={model:'read',prefill:'read',load:'read',check:'check',ready:'idle',start:'read','action-stream':'plan',decision:'plan',action:'command',output:'command',delta:'write',file:'check',context:'memory',review:'review',budget:'review',blocked:'review','tool-error':'error','completion-rejected':'review',dispatch:'plan',error:'error',paused:'idle',stopped:'idle',complete:'idle',running:'read'};
+const phases={model:'read',prefill:'read',load:'read',check:'check',ready:'idle',start:'read','action-stream':'plan',decision:'plan',action:'command',output:'command',delta:'write',file:'check',context:'memory',review:'review',budget:'review',blocked:'review','browser-handoff':'review','tool-error':'error','completion-rejected':'review',dispatch:'plan',error:'error',paused:'idle',stopped:'idle',complete:'idle',running:'read'};
+export const kernelGuide=[
+ {event:'ready',name:'Ready',description:'A slow green breath. Tom is available; no task is running.'},
+ {event:'model',name:'Reading',description:'Open brackets. Tom is reading your request and the information gathered so far.'},
+ {event:'decision',name:'Preparing an action',description:'A diamond. Tom is preparing the next tool call; the current line names the action.'},
+ {event:'action',name:'Running a command',description:'A terminal symbol. A command or browser action is running. Expand Activity to see it.'},
+ {event:'delta',name:'Writing',description:'Growing lines. Tom is producing a reply or writing a file.'},
+ {event:'check',name:'Checking a result',description:'A check mark. Tom is checking this step; it does not mean the whole task is finished.'},
+ {event:'context',name:'Keeping task notes',description:'Stacked lines. Tom is shortening its working context and saving a record for later.'},
+ {event:'review',name:'Needs attention · amber',description:'An amber exclamation mark. Review is needed, a limit was reached, or progress has stalled.'},
+ {event:'error',name:'Error · red',description:'A red exclamation mark. A step failed. Read the error and expand its result before retrying.'}
+];
+export function kernelColor(stage,day=false){return stage==='error'?(day?'#c62828':'#f87171'):stage==='review'?(day?'#aa6600':'#f59e0b'):(day?'#07845d':'#10b981');}
 export function drawKernel(canvas,phase=0,status=state){
  const c=canvas.getContext('2d'),w=canvas.width,h=canvas.height,day=document.documentElement.dataset.theme==='day',stage=phases[status]??mode;
- const busy=!['idle','error'].includes(stage),amber=['review','error'].includes(stage),emerald=day?'#07845d':'#10b981',cyan=day?'#007fa9':'#38bdf8',main=amber?(day?'#aa6600':'#f59e0b'):emerald;
+ const cyan=stage==='error'?kernelColor(stage,day):day?'#007fa9':'#38bdf8',main=kernelColor(stage,day);
  c.clearRect(0,0,w,h);c.save();c.scale(w/96,h/96);c.lineCap='round';c.lineJoin='round';
  const wave=.5+.5*Math.sin(phase*Math.PI*2),opacity=.2+.8*wave;
  c.strokeStyle=main;c.lineWidth=2;c.globalAlpha=.45+.5*wave;

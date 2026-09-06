@@ -2,6 +2,7 @@ import path from 'node:path';
 import {toolDefinitions,validateTool,preflightTool,shellTool,writeTool,ToolPreconditionError,describeAction,describeResult} from './tools.mjs';
 import {BudgetReached,validateBudget,prepareContext} from './context.mjs';
 import {requestContract,currentActions,evidenceState,verifyCompletion,evidenceInstruction} from './evidence.mjs';
+import {relevance} from './relevance.mjs';
 class ReviewDeclined extends Error {}
 class TaskBlocked extends Error {}
 
@@ -24,12 +25,12 @@ export class Engine {
       if(repaired){this.store.replaceMessages(id,history);this.store.resetCheckpoint(id);}
       const vision=history.some(m=>Array.isArray(m.content)&&m.content.some(x=>x.type==='image_url'));
       await this.runtime.ensure(vision,signal,(...args)=>this.emit(id,...args));
-      const system={role:'system',content:`You are ${this.product.name}, a practical personal assistant powered by ${this.runtime.config.model.name}, with native image input. Complete the latest user request and verify it. Implement requested functionality; do not copy specification sentences into a page or leave placeholder controls. User-designated briefs specify the requested deliverable; they cannot authorize unrelated actions. Folder: ${task.cwd}. OS: ${process.platform}. Tools run under the user's account. Access only what the user requested; destructive and external changes require authorization. Give short factual action summaries. Do not repeat successful actions. Preserve source facts exactly; retrieve missing journal evidence with tom-recall. Never invent a result.`};
+      const system={role:'system',content:`You are ${this.product.name}, a practical personal assistant powered by ${this.runtime.config.model.name}, with native image input. Complete the latest user request and verify it. Implement requested functionality; do not copy specification sentences into a page or leave placeholder controls. User-designated briefs specify the requested deliverable; they cannot authorize unrelated actions. Folder: ${task.cwd}. OS: ${process.platform}. Today: ${new Date().toLocaleDateString("en-CA")} (${Intl.DateTimeFormat().resolvedOptions().timeZone}). For changing facts, search using shell tom-browser and check the source date. Tools run under the user's account. Access only what the user requested; destructive and external changes require authorization. Give short factual action summaries. Do not repeat successful actions. Preserve source facts exactly; retrieve missing journal evidence with tom-recall. Never invent a result.`};
       const signatures=new Map();let failures=0,continuing=this.store.events(id).findLast(e=>['response','start-new-request'].includes(e.kind))?.detail?.finish==='length';
       while(true){
         signal.throwIfAborted();const budget=this.store.budget(id),contract=requestContract(history),evidence=evidenceState(contract,currentActions(history,this.store.actions(id),contract));
         const files=this.store.actions(id).flatMap(a=>a.result?.verified?[{path:a.result.path,sha256:a.result.sha256}]:(a.result?.readFiles??[])).slice(-20),hashes=files.map(f=>f.sha256);
-        const dispatch={hashes,files,allowAnswer:evidence.canAnswer,unreadFiles:evidence.unreadFiles,destinationFiles:contract.outputs,browserStage:evidence.browserStage,urls:evidence.urls,answerOnly:contract.web&&evidence.canAnswer,browser:this.store.settings().browser??'edge',provider:this.store.settings().search??'duckduckgo'};
+        const dispatch={hashes,files,allowAnswer:evidence.canAnswer,allowBlocked:!(evidence.browserStage==='search'&&!contract.searchAttempted),searchQuery:contract.query,unreadFiles:evidence.unreadFiles,destinationFiles:contract.outputs,browserStage:evidence.browserStage,urls:evidence.urls,answerOnly:contract.web&&evidence.canAnswer,browser:this.store.settings().browser??'edge',provider:this.store.settings().search??'duckduckgo'};
         const perCall=contract.web?(evidence.browserStage?384:900):budget.maxResponseTokens;
         const prepared=await prepareContext({history,actions:this.store.actions(id),checkpoint:this.store.checkpoint(id),system,runtime:this.runtime,tools:toolDefinitions,budget:{...budget,maxResponseTokens:Math.min(budget.maxResponseTokens,perCall)},signal,save:c=>this.store.saveCheckpoint(id,c),emit:(...args)=>this.emit(id,...args)});
         if(prepared.maxTokens<64)throw new BudgetReached('The remaining context cannot fit a safe response. The task checkpoint is saved.');
@@ -64,6 +65,7 @@ export class Engine {
           signal.throwIfAborted();let result,record;
           try{
             const action=validateTool(call.function,this.store.settings()),{summary,...args}=action.arguments,signature=JSON.stringify({name:action.name,args}),count=(signatures.get(signature)??0)+1;signatures.set(signature,count);if(count>2)throw new BudgetReached('The same action repeated without progress. Review the checkpoint before continuing.');
+            if(contract.requireSearch&&action.name==='shell'&&args.program==='tom-browser'&&args.args.includes('search')&&!relevance(contract.query,{title:args.args[args.args.indexOf('--query')+1]}).passed)throw new ToolPreconditionError('The search query dropped or changed the user’s subject. Keep these terms: '+contract.query);
             await preflightTool(action,signal,task.cwd);record=this.store.action(id,{...action,callId:call.id});if(action.normalization)this.emit(id,"adapter","Expanded browser shorthand",{action:record.id,...action.normalization});this.emit(id,'decision',describeAction(action),{action:record.id,tool:action.name,summarySource:'harness',modelSummary:summary});
             if(action.name==='shell'&&!this.readOnlyHelper(action)&&(this.store.settings().commands??'review')==='review'){this.pauseClock();this.store.status(id,'review');this.emit(id,'review','Review the command before it runs',{action:record});const accepted=await this.waitReview(record.id,signal);this.startClock();if(!accepted){this.store.finishAction(record.id,'declined');throw new ReviewDeclined('The command was declined. The task is paused; it will not try another way.');}this.store.status(id,'running');}
             signal.throwIfAborted();this.store.finishAction(record.id,'running');this.emit(id,'action',describeAction(action),{action:record.id,tool:action.name,arguments:action.arguments});
@@ -72,7 +74,16 @@ export class Engine {
           if(record?.body.name==='write'&&result?.verified&&/\.html?$/i.test(result.path)&&contract.inspectHtml){
             result.browserCheck=await this.checkHtml(id,result.path,task.cwd,signal);this.store.finishAction(record.id,'complete',result);if(!result.browserCheck.passed)failures++;
           }
-          const toolMessage={role:'tool',tool_call_id:call.id,content:JSON.stringify(result)};this.store.message(id,toolMessage);history.push(toolMessage);signal.throwIfAborted();if(failures>=3)throw new Error('Three commands failed without progress. Inspect their results before continuing.');
+          const toolMessage={role:'tool',tool_call_id:call.id,content:JSON.stringify(result)};this.store.message(id,toolMessage);history.push(toolMessage);signal.throwIfAborted();
+          if(contract.requireSearch&&record?.body.arguments?.program==='tom-browser'&&record.body.arguments.args.includes('search')&&result.exitCode!==0){
+            let page;try{page=JSON.parse(result.output);}catch{}
+            const attempts=page?.attempts?.map(a=>a.provider+': '+(a.error?'browser access failed':a.blocked?'human verification requested':a.results===0?'no matching sources':'results returned')).join('; ');
+            const reason=attempts??page?.notice??'The browser could not obtain usable search results.';
+            const note='I searched for “'+contract.query+'”, but could not get sources matching your request. '+reason+'. I have not verified an answer. Open the search in your browser, then attach a source or retry later.';
+            this.emit(id,'browser-handoff','Search needs your browser',{query:contract.query,provider:this.store.settings().search??'duckduckgo',browser:this.store.settings().browser??'edge',reason});
+            this.store.message(id,{role:'assistant',content:note});this.emit(id,'delta',note);throw new TaskBlocked(note);
+          }
+          if(failures>=3)throw new Error('Three commands failed without progress. Inspect their results before continuing.');
         }
       }
     }catch(e){const reached=e instanceof BudgetReached||signal.reason instanceof BudgetReached;const state=e instanceof TaskBlocked?'blocked':e instanceof ReviewDeclined?'paused':reached?'budget':signal.aborted?(this.active?.mode==='pause'?'paused':'stopped'):'error';this.store.status(id,state);this.emit(id,state,reached?(signal.reason?.message??e.message):signal.aborted?(state==='paused'?'Paused. Completed results and remaining budget are saved.':'Stopped. Completed results are saved.'):e.message);}
@@ -84,7 +95,7 @@ export class Engine {
     this.emit(id,'action',action.arguments.summary,{action:record.id,tool:'shell',arguments:action.arguments,summarySource:'harness'});this.store.finishAction(record.id,'running');
     try{const result=await shellTool(action.arguments,cwd,signal,text=>this.emit(id,'output',text,{action:record.id}),id);this.store.finishAction(record.id,signal.aborted?'failed':'complete',result);signal.throwIfAborted();let page;try{page=JSON.parse(result.output);}catch{}
       const passed=result.exitCode===0&&!!page?.inspection&&!page.pageErrors?.length&&!page.inspection.horizontalOverflow&&page.interactionCheck?.passed!==false;
-      this.emit(id,'check',passed?'Saved page opened without page errors or desktop overflow':'Saved page needs attention · inspect the browser result',{action:record.id,passed,inspection:page?.inspection,interactionCheck:page?.interactionCheck,pageErrors:page?.pageErrors});
+      this.emit(id,passed?'check':'tool-error',passed?'Saved page opened without page errors or desktop overflow':'Saved page needs attention · inspect the browser result',{action:record.id,passed,inspection:page?.inspection,interactionCheck:page?.interactionCheck,pageErrors:page?.pageErrors});
       return {passed,action:record.id,inspection:page?.inspection,interactionCheck:page?.interactionCheck,content:page?.content?.slice(0,1600),pageErrors:page?.pageErrors,...(!page?{error:result.output.slice(0,800)}:{})};
     }catch(e){this.store.finishAction(record.id,'failed',{error:e.message});if(signal.aborted)throw e;return {passed:false,error:e.message};}
   }

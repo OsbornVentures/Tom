@@ -125,7 +125,7 @@ const server=http.createServer(async(req,res)=>{
           if(engine.active||qualification.running)throw new Error('Pause the current conversation or finish the system check first.');
           if(store.actions(id).some(a=>a.status==='uncertain'))throw new Error('An interrupted action needs inspection. Start a new conversation to inspect its result.');
           if(action==='message'){const data=await body(req);store.message(id,inputMessage(data.text,data.images));engine.initBudget(id,true);store.resetCheckpoint(id);}
-          else if(!['paused','interrupted','stopped','error','budget'].includes(task.status))throw new Error('This conversation does not need resuming.');
+          else if(!['paused','interrupted','stopped','error','blocked','budget'].includes(task.status))throw new Error('This conversation does not need resuming.');
           send(res,200,{ok:true});void engine.run(id);return;
         }
       }
@@ -140,7 +140,7 @@ const server=http.createServer(async(req,res)=>{
     }
     res.setHeader('Content-Security-Policy',"default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'self'; media-src blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
     if(req.method!=='GET'){send(res,405,{error:'Method not allowed.'});return;}
-    const allowed={'/':'index.html','/app.js':'app.js','/styles.css':'styles.css','/mark.svg':'mark.svg','/kernel.js':'kernel.js'};
+    const allowed={'/':'index.html','/app.js':'app.js','/styles.css':'styles.css','/mark.svg':'mark.svg','/kernel.js':'kernel.js','/help.js':'help.js','/tom-icon-v05.svg':'tom-icon-v05.svg'};
     if(!allowed[url.pathname]){send(res,404,{error:'Not found.'});return;}
     const file=path.join(root,'public',allowed[url.pathname]);res.writeHead(200,{'Content-Type':mime[path.extname(file)]});res.end(await readFile(file));
   }catch(e){if(!res.headersSent)send(res,400,{error:e.message});else res.end();}

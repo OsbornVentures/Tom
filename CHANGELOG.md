@@ -1,5 +1,14 @@
 # Development changes
 
+## 0.5.0
+
+- Conversational current-fact questions now require an actual browser attempt. A bare follow-up such as “search the web for it” resolves its subject from earlier user messages, not model answers or search results.
+- Required research queries are bound to the original subject during decoding. Relevance distinguishes identifying terms from broad topic words and checks region codes/product IDs; wrong-location pages cannot pass merely on “weather” and “today.” This remains a conservative lexical check, not full semantic verification.
+- Search failures record provider attempts and rejected subjects. A visible handoff opens the original query in the user's normal browser; it does not bypass verification challenges or copy browser cookies. Blocked tasks can resume through the API.
+- A new versioned emerald/cyan favicon, red error state, nine-shape Help guide, mobile Help access, and plain-language context/memory/model-limit explanations.
+- Supporting documentation lookups remain part of file-building tasks, rather than replacing their deliverable requirements with a research-only task.
+- Windows CI now uses absolute compiler paths and current runner actions. The baseline source is uploaded to the private repository; release signing and hardware qualification are still outstanding.
+
 ## 0.4.0
 
 - Token-level GBNF dispatch for shell/write, with an enforcement probe at model load. Incomplete or malformed actions cannot execute.
