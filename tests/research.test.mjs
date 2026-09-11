@@ -7,6 +7,9 @@ import {memoryExplanation} from '../public/help.js';
 const user=content=>({role:'user',content});
 
 test('conversational current facts require a browser attempt; creative and offline tasks do not',()=>{
+ assert.equal(requestContract([user('Hey tom whats the weather like in lorena tx today?')]).requireSearch,true);
+ assert.equal(requestContract([user('Hey tom whats the weather like in lorena tx today?')]).query,'weather lorena tx today');
+ assert.equal(requestContract([user('Hey Tom, write a poem about today’s weather.')]).requireSearch,false);
  for(const text of ['What is the weather like in lorena tx today?','What is the weather in Salem MA?','Who is the current CEO of Acme?','What is the latest release of WidgetOS?'])assert.equal(requestContract([user(text)]).requireSearch,true,text);
  for(const text of ['Write a poem about today’s weather.','What does the word weather mean?','What is 2 + 2?','What is the weather in Rome? Do not search.'])assert.equal(requestContract([user(text)]).requireSearch,false,text);
 });

@@ -1,0 +1,71 @@
+{
+  "kind": "observational production request-classification audit; no inference",
+  "rows": [
+    {
+      "request": "Read source.txt and create solution.txt implementing the requested correction.",
+      "recognizedOutputs": [
+        "solution.txt"
+      ],
+      "requiredSourceReads": [
+        "source.txt"
+      ],
+      "fileWork": true,
+      "canAnswerWithNoActions": false,
+      "missingEvidence": [
+        "solution.txt",
+        "Read each requested source file: source.txt"
+      ]
+    },
+    {
+      "request": "Read source.json and create solution.json implementing the requested correction.",
+      "recognizedOutputs": [
+        "solution.json"
+      ],
+      "requiredSourceReads": [
+        "source.json"
+      ],
+      "fileWork": true,
+      "canAnswerWithNoActions": false,
+      "missingEvidence": [
+        "solution.json",
+        "Read each requested source file: source.json"
+      ]
+    },
+    {
+      "request": "Read source.js and create solution.js implementing the requested correction.",
+      "recognizedOutputs": [
+        "solution.js"
+      ],
+      "requiredSourceReads": [],
+      "fileWork": true,
+      "canAnswerWithNoActions": false,
+      "missingEvidence": [
+        "solution.js"
+      ]
+    },
+    {
+      "request": "Read source.cjs and create solution.cjs implementing the requested correction.",
+      "recognizedOutputs": [],
+      "requiredSourceReads": [],
+      "fileWork": false,
+      "canAnswerWithNoActions": true,
+      "missingEvidence": []
+    },
+    {
+      "request": "Read source.mjs and create solution.mjs implementing the requested correction.",
+      "recognizedOutputs": [],
+      "requiredSourceReads": [],
+      "fileWork": false,
+      "canAnswerWithNoActions": true,
+      "missingEvidence": []
+    },
+    {
+      "request": "Read source.py and create solution.py implementing the requested correction.",
+      "recognizedOutputs": [],
+      "requiredSourceReads": [],
+      "fileWork": false,
+      "canAnswerWithNoActions": true,
+      "missingEvidence": []
+    }
+  ]
+}

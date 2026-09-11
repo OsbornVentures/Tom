@@ -26,9 +26,13 @@ jobs:
           Copy-Item -LiteralPath (Get-Command node).Source -Destination runtime/node.exe
           ./scripts/build-launcher.ps1
           $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-          $source=Join-Path $env:GITHUB_WORKSPACE 'scripts/Installer.cs'
-          $output=Join-Path $env:GITHUB_WORKSPACE '.state/Setup-Tom.exe'
-          & $compiler /nologo /target:winexe /reference:System.dll /reference:System.Core.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Web.Extensions.dll ("/out:"+$output) $source
-          if($LASTEXITCODE -ne 0){throw 'Installer compilation failed.'}
+          $refs=@('System','System.Core','System.Drawing','System.Windows.Forms','System.Web.Extensions','System.IO.Compression','System.IO.Compression.FileSystem') | ForEach-Object { '/reference:'+$_+'.dll' }
+          $sources=@('Setup.cs','SetupBrand.cs','Uninstall.cs','SetupTests.cs') | ForEach-Object { Join-Path $env:GITHUB_WORKSPACE ('scripts/'+$_) }
+          $output=Join-Path $env:GITHUB_WORKSPACE '.state/SetupTests.exe'
+          & $compiler /nologo /target:exe /main:SetupTests @refs ("/out:"+$output) @sources
+          if($LASTEXITCODE -ne 0){throw 'Installer test compilation failed.'}
+          & $output (Join-Path $env:GITHUB_WORKSPACE '.state/setup-tests')
+          if($LASTEXITCODE -ne 0){throw 'Installer checks failed.'}
+
 # Model benchmarks and offline package qualification need the pinned multi-GB
 # assets and physical target hardware. This workflow does not claim either.

@@ -25,11 +25,26 @@ test('a second compaction keeps an evidence preview from the first action',()=>{
  for(const level of [0,1]){const compact=JSON.stringify(compactMessages(history,actions,level));assert.ok(compact.includes('MAPLE-0'));assert.ok(compact.includes('MAPLE-7'));}
 });
 test('a checkpoint explicitly focuses on the latest revision request',()=>{const m=compactMessages([{role:'user',content:'Create index.html'},{role:'assistant',content:'The first page is complete.'},{role:'user',content:'Create index-v2.html with revised hours.'}],[],1);assert.match(m.at(-1).content,/Latest user request: Create index-v2.html with revised hours/);assert.match(m.at(-1).content,/not an older deliverable/);});
+
+test('a new research subject retains earlier action identities without reloading old page bodies',()=>{
+ const history=[{role:'user',content:'Weather in Lorena TX'},{role:'assistant',tool_calls:[{id:'weather-call'}]},{role:'user',content:'Search for cookie recipes'},{role:'assistant',tool_calls:[{id:'cookie-call'}]}];
+ const actions=[['weather','OLD_WEATHER_PAGE'],['cookie','CURRENT_COOKIE_PAGE']].map(([id,output])=>({id,status:'complete',body:{name:'shell',callId:id+'-call',arguments:{program:'tom-browser',summary:'Read '+id}},result:{exitCode:0,output}}));
+ const memory=compactMessages(history,actions,1).find(m=>m.content?.startsWith('Saved task checkpoint:')).content;
+ assert.doesNotMatch(memory,/OLD_WEATHER_PAGE/);assert.match(memory,/CURRENT_COOKIE_PAGE/);assert.match(memory,/"id":"weather"/);
+ assert.equal(actions[0].result.output,'OLD_WEATHER_PAGE','The durable evidence remains intact.');
+});
+
+test('evidence instructions are counted before reserving the response window',async()=>{
+ const instruction='Read the remaining source. '.repeat(80),count=async messages=>300+Math.ceil(JSON.stringify(messages).length/4);
+ const result=await prepareContext({history:[{role:'user',content:'Search cookie recipes'},{role:'tool',content:'old page '.repeat(900)}],actions:[],system:{role:'system',content:'Test'},runtime:{config:{context:4096},count},budget:{...base,maxResponseTokens:900},instruction,save:()=>{},emit:()=>{}});
+ assert.ok(result.compacted);assert.match(result.messages.at(-1).content,/Read the remaining source/);
+ assert.equal(result.inputTokens,await count(result.messages));assert.ok(result.inputTokens+result.maxTokens+128<=4096);assert.equal(result.maxTokens,900);
+});
 test('one multi-step task compacts tool history and completes without replaying actions',async()=>fixture(async({root,store})=>{
-  store.saveSettings({commands:'automatic'});const task=store.create('Six checks',root);store.message(task.id,{role:'user',content:'Read six distinct facts. Keep MAPLE-73 as the final reference.'});let calls=0;const allowances=[];
+  store.saveSettings({commands:'automatic'});const task=store.create('Six checks',root);store.message(task.id,{role:'user',content:'Run six commands for distinct facts. Keep MAPLE-73 as the final reference.'});let calls=0;const allowances=[];
   const worker=runtime(async(messages,tools,signal,delta,options)=>{
     allowances.push(options.maxTokens);assert.ok(JSON.stringify(messages).includes('MAPLE-73'));
-    if(calls++<6)return {role:'assistant',content:'',tool_calls:[{id:'call-'+calls,type:'function',function:{name:'shell',arguments:JSON.stringify({summary:'Read fact '+calls,program:process.execPath,args:['-e','console.log('+JSON.stringify('Fact '+calls+' '+'.'.repeat(6500))+')']})}}],usage:{completion_tokens:100},finish:'tool_calls'};
+    if(calls++<6)return {role:'assistant',content:'',tool_calls:[{id:'call-'+calls,type:'function',function:{name:'run',arguments:JSON.stringify({program:process.execPath,args:['-e','console.log('+JSON.stringify('Fact '+calls+' '+'.'.repeat(6500))+')']})}}],usage:{completion_tokens:100},finish:'tool_calls'};
     return {role:'assistant',content:'MAPLE-73. Six checks completed.',usage:{completion_tokens:10},finish:'stop'};
   });await new Engine(store,worker,root,()=>{}).run(task.id);
   assert.equal(store.task(task.id).status,'complete');assert.equal(store.actions(task.id).length,6);assert.ok(store.checkpoint(task.id));assert.ok(store.events(task.id).filter(e=>e.kind==='context').length>=2);assert.equal(store.budget(task.id).usedSteps,7);assert.equal(store.budget(task.id).usedTokens,610);assert.ok(allowances[0]>900);assert.ok(store.messages(task.id).some(m=>m.role==='tool'&&m.content.length>6000));
@@ -39,8 +54,8 @@ test('a clipped reply continues instead of being marked complete',async()=>fixtu
 }));
 test('a write rejected before changes can correct its precondition without uncertain-state lockout',async()=>fixture(async({root,store})=>{
  const task=store.create('Create a file',root);store.message(task.id,{role:'user',content:'Create note.txt with hello.'});let calls=0;
- const engine=new Engine(store,runtime(async()=>{calls++;return calls<3?{role:'assistant',content:'',tool_calls:[{id:'write-'+calls,type:'function',function:{name:'write',arguments:JSON.stringify({summary:'Create note',path:'note.txt',content:'hello',expectedHash:calls===1?'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855':'new'})}}],usage:{completion_tokens:20},finish:'tool_calls'}:{role:'assistant',content:'Saved',usage:{completion_tokens:3},finish:'stop'};}),root,()=>{});
- await engine.run(task.id);assert.equal(store.task(task.id).status,'complete');assert.deepEqual(store.actions(task.id).map(a=>a.status),['failed','complete']);assert.equal(store.actions(task.id)[1].result.verified,true);
+ const engine=new Engine(store,runtime(async()=>{calls++;return calls<3?{role:'assistant',content:'',tool_calls:[{id:'write-'+calls,type:'function',function:{name:'write',arguments:JSON.stringify({path:'note.txt',content:'hello',...(calls===1?{base:'missing-reference'}:{})})}}],usage:{completion_tokens:20},finish:'tool_calls'}:{role:'assistant',content:'Saved',usage:{completion_tokens:3},finish:'stop'};}),root,()=>{});
+ await engine.run(task.id);assert.equal(store.task(task.id).status,'complete');assert.deepEqual(store.actions(task.id).map(a=>a.status),['complete']);assert.equal(store.actions(task.id)[0].result.verified,true);assert.ok(store.events(task.id).some(e=>e.kind==='tool-error'));
 }));
 test('pause and database restart preserve spent budget, including interrupted inference',async()=>fixture(async({root,file,store,replace})=>{
  const task=store.create('Pause me',root);store.message(task.id,{role:'user',content:'Explain'});let began;const started=new Promise(r=>began=r);

@@ -3,6 +3,34 @@
   "checked": "2026-09-05T17:17:16.843Z",
   "models": [
     {
+      "id": "gemma-4-e2b-q8_0",
+      "name": "Gemma 4 E2B Q8 (higher precision)",
+      "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+      "revision": "b4243c156154b6dca9324415f8c7ccc098b4aed1",
+      "workRatio": 1.5,
+      "minAvailableGiB": 6,
+      "model": {
+        "id": "gemma-4-e2b-q8_0",
+        "name": "Gemma 4 E2B Q8_0",
+        "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+        "revision": "b4243c156154b6dca9324415f8c7ccc098b4aed1",
+        "path": "models/gemma-4-E2B-it-Q8_0.gguf",
+        "bytes": 4967497152,
+        "sha256": "996d08777aadc6bfd3c7375ef70ba25a0f55240075860754fdb18d6d860aa63a",
+        "quantization": "Q8_0",
+        "training": "instruction-tuned GGUF conversion; exact QAT/non-QAT source lineage not independently confirmed",
+        "filename": "gemma-4-E2B-it-Q8_0.gguf"
+      },
+      "vision": {
+        "path": "models/mmproj-gemma-4-E2B-it-Q8_0.gguf",
+        "bytes": 557368064,
+        "sha256": "9406f99c16d68cda4f1f0552192dcc99021ea1fc6d2fd50b1dc3ccf30d04b292",
+        "modelRevision": "b4243c156154b6dca9324415f8c7ccc098b4aed1",
+        "filename": "mmproj-gemma-4-E2B-it-Q8_0.gguf"
+      },
+      "source": "https://huggingface.co/ggml-org/gemma-4-E2B-it-GGUF/tree/b4243c156154b6dca9324415f8c7ccc098b4aed1"
+    },
+    {
       "id": "gemma-4-e4b",
       "name": "Gemma 4 E4B",
       "repo": "google/gemma-4-E4B-it-qat-q4_0-gguf",

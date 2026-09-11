@@ -10,6 +10,8 @@ $entries = @(
   @{ Relative='Directory\Background\shell\Tom.Ask'; Argument='--ask-folder "%V"' }
 )
 $changed = @()
+$uninstallKey='HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Tom'
+if(Test-Path -LiteralPath $uninstallKey){$owner=Get-ItemPropertyValue -LiteralPath $uninstallKey -Name 'InstallLocation' -ErrorAction SilentlyContinue;if($owner -ne $projectRoot){throw 'Another Tom installation owns the Windows app entry. It was left unchanged.'}}
 foreach ($entry in $entries) {
   $key = $baseKey + $entry.Relative
   if (!$key.StartsWith($baseKey,[StringComparison]::OrdinalIgnoreCase) -or !$key.EndsWith('\Tom.Ask')) { throw 'Unexpected registry target.' }
@@ -48,6 +50,15 @@ foreach ($shortcutPath in $shortcutPaths) {
     $shortcut.Arguments = if ($shortcutPath.EndsWith('Ask Tom.lnk')) { '--ask-file' } else { '' }
     $shortcut.Save()
   }
+}
+if($Remove){if(Test-Path -LiteralPath $uninstallKey){Remove-Item -LiteralPath $uninstallKey -Recurse}}
+else {
+  $product=Get-Content -LiteralPath (Join-Path $projectRoot 'config/product.json') -Raw | ConvertFrom-Json
+  New-Item -Path $uninstallKey -Force | Out-Null
+  $values=@{DisplayName='Tom';DisplayVersion=$product.version;InstallLocation=$projectRoot;DisplayIcon=$launcher;UninstallString=('"'+(Join-Path $projectRoot 'Uninstall-Tom.exe')+'"')}
+  foreach($name in $values.Keys){New-ItemProperty -LiteralPath $uninstallKey -Name $name -Value $values[$name] -PropertyType String -Force | Out-Null}
+  New-ItemProperty -LiteralPath $uninstallKey -Name 'NoModify' -Value 1 -PropertyType DWord -Force | Out-Null
+  New-ItemProperty -LiteralPath $uninstallKey -Name 'NoRepair' -Value 1 -PropertyType DWord -Force | Out-Null
 }
 New-Item -ItemType Directory -Path (Join-Path $projectRoot '.state') -Force | Out-Null
 @{installed=(!$Remove);root=$projectRoot;keys=$changed;shortcuts=$shortcutPaths;time=(Get-Date).ToString('o')} | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $projectRoot '.state\windows-integration.json') -Encoding UTF8

@@ -5,6 +5,14 @@ import path from 'node:path';
 export function machineProfile() {
   return {platform:os.platform(),arch:os.arch(),cpu:os.cpus()[0]?.model??'Unknown',threads:os.cpus().length,ramGiB:Math.round(os.totalmem()/1073741824),availableGiB:Math.round(os.freemem()/1073741824*10)/10};
 }
+export function localCapabilities(){
+  const find=name=>{
+    const extensions=process.platform==='win32'?['.exe','.cmd','.bat']:[''];
+    for(const dir of (process.env.PATH??'').split(path.delimiter))for(const ext of extensions){const file=path.join(dir,name+ext);if(fs.existsSync(file))return file;}
+    return null;
+  };
+  return {machine:machineProfile(),programs:{node:process.execPath,git:find('git'),python:find('python'),powershell:find('powershell'),pwsh:find('pwsh')},browsers:browserOptions().filter(b=>b.path).map(b=>({id:b.id,path:b.path})),target:{platform:'Windows 10/11 x64',cpu:'64-bit Intel or AMD; CPU fallback available',ramGiB:8,physicalQualification:'Low-end Intel, 8 GB RAM, and additional GPU hardware testing pending'}};
+}
 export function modelOptions(machine, runtime) {
   // Memory estimates only decide which probes may run. A passing probe is mandatory before offering an install.
   return [

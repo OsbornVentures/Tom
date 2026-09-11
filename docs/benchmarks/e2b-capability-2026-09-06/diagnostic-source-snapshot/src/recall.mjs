@@ -1,0 +1,10 @@
+import {DatabaseSync} from 'node:sqlite';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i]]=process.argv[i+1];
+if(!/^[a-f0-9-]{36}$/.test(args['--action']??''))throw new Error('Provide the action ID from the task checkpoint.');
+const offset=Number(args['--offset']??0),limit=Number(args['--limit']??3000);if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<1||limit>6000)throw new Error('Choose a nonnegative offset and a limit between 1 and 6000.');
+const db=new DatabaseSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../.state/tom.sqlite'),{readOnly:true});
+const row=db.prepare('SELECT task,status,result FROM actions WHERE id=?').get(args['--action']);db.close();if(!row)throw new Error('No recorded action has this ID.');
+if(process.env.TOM_TASK_ID&&row.task!==process.env.TOM_TASK_ID)throw new Error('That action belongs to another conversation.');
+const result=JSON.parse(row.result??'null'),text=typeof result?.output==='string'?result.output:JSON.stringify(result);console.log(JSON.stringify({action:args['--action'],status:row.status,offset,totalCharacters:text.length,nextOffset:offset+limit<text.length?offset+limit:null,content:text.slice(offset,offset+limit)}));

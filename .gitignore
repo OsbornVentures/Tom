@@ -3,6 +3,7 @@ runtime/
 .state/
 node_modules/
 audit/
+tmp/
 dist/
 reference/
 prerequisites/
@@ -18,3 +19,13 @@ prerequisites/
 *.pem
 *.key
 *.partial
+
+# Local generated work and benchmark outputs
+output/
+/Prepare-Tom-USB.cmd
+/index.html
+/tom-test-*
+
+# Owner-specific USB provisioning and archive helpers
+/scripts/prepare-tom-usb.ps1
+/scripts/archive-harness-repair.ps1

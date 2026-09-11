@@ -2,3 +2,10 @@
 *.png binary
 *.ico binary
 *.docx binary
+*.gif binary
+*.pdf binary
+
+# Keep frozen benchmark evidence byte-for-byte, including vendor metadata.
+docs/benchmarks/e2b-capability-2026-09-06/** -text -whitespace
+docs/benchmarks/harness-v2-validation-2026-09-06/** -text -whitespace
+docs/benchmarks/harness-repair-2026-09-07/** -text -whitespace

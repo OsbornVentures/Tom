@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Decision Game</title>
+<style>
+    body {
+        font-family: sans-serif;
+        background-color: #111;
+        color: #eee;
+        padding: 20px;
+        text-align: center;
+    }
+    #game-container {
+        max-width: 600px;
+        margin: 0 auto;
+        border: 1px solid #444;
+        padding: 20px;
+        background-color: #222;
+    }
+    button {
+        padding: 10px 20px;
+        margin: 10px;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #story {
+        min-height: 150px;
+        text-align: left;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-left: 3px solid #aaa;
+    }
+    .win { color: #4CAF50; font-weight: bold; }
+    .lose { color: #f44336; font-weight: bold; }
+</style>
+</head>
+<body>
+<div id="game-container">
+    <div id="story">Welcome to the Crossroads. A mysterious fog has enveloped the land. You stand at the edge of the Whispering Woods. Do you enter the woods, or follow the faint light on the horizon?</div>
+    <div id="choices">
+        <button onclick="makeDecision('woods')">Enter the Whispering Woods</button>
+        <button onclick="makeDecision('light')">Follow the Light</button>
+    </div>
+</div>
+
+<script>
+    const storyElement = document.getElementById('story');
+    const choicesElement = document.getElementById('choices');
+
+    function updateStory(text, isWin = false, isLose = false) {
+        storyElement.innerHTML = text;
+        choicesElement.innerHTML = '';
+        if (isWin) {
+            storyElement.className = 'win';
+        } else if (isLose) {
+            storyElement.className = 'lose';
+        }
+    }
+
+    function makeDecision(choice) {
+        if (choice === 'woods') {
+            // Woods path
+            const woodsChoices = [
+                { text: "Follow the faint, moss-covered path.", next: 'moss_path' },
+                { text: "Venture into the deepest, darkest thicket.", next: 'dark_thicket' }
+            ];
+
+            // Replace current choices with new ones
+            choicesElement.innerHTML = '';
+            woodsChoices.forEach(c => {
+                const button = document.createElement('button');
+                button.textContent = c.text;
+                button.onclick = () => makeDecision(c.next);
+                choicesElement.appendChild(button);
+            });
+            updateStory("You are deep within the Whispering Woods. The air is thick with ancient magic. What do you do next?", false);
+
+        } else if (choice === 'light') {
+            // Light path
+            const lightChoices = [
+                { text: "Approach the light cautiously.", next: 'cautious_light' },
+                { text: "Run towards the light with all your might.", next: 'run_light' }
+            ];
+
+            // Replace current choices with new ones
+            choicesElement.innerHTML = '';
+            lightChoices.forEach(c => {
+                const button = document.createElement('button');
+                button.textContent = c.text;
+                button.onclick = () => makeDecision(c.next);
+                choicesElement.appendChild(button);
+            });
+            updateStory("The light beckons from the horizon, a beacon of warmth against the encroaching gloom. How do you proceed?", false);
+        }
+    }
+
+    // --- Game States ---
+
+    // Woods Path States
+    function moss_path() {
+        updateStory("The moss-covered path leads you to a small, glowing spring. You feel a sense of calm, but a shadowy figure watches from the treeline. Do you drink from the spring, or ignore it and continue?", false);
+        choicesElement.innerHTML = `
+            <button onclick="makeDecision('drink_spring')">Drink from the Spring</button>
+            <button onclick="makeDecision('ignore_spring')">Ignore the Spring</button>
+        `;
+    }
+
+    function dark_thicket() {
+        updateStory("The thicket is a maze of thorny vines and strange, low growls. You are lost. Do you try to fight your way out, or find a small clearing to rest and think?", false);
+        choicesElement.innerHTML = `
+            <button onclick="makeDecision('fight_thicket')">Fight Your Way Out</button>
+            <button onclick="makeDecision('rest_thicket')">Rest in the Clearing</button>
+        `;
+    }
+
+    // Light Path States
+    function cautious_light() {
+        updateStory("As you draw nearer, the light resolves into a small, isolated village nestled in a valley. The villagers seem wary of outsiders. Do you approach them with open hands, or circle the village perimeter first?", false);
+        choicesElement.innerHTML = `
+            <button onclick="makeDecision('approach_village')">Approach with Open Hands</button>
+            <button onclick="makeDecision('circle_village')">Circle the Perimeter</button>
+        `;
+    }
+
+    function run_light() {
+        updateStory("Your frantic rush leads you directly into the path of a massive, lumbering beast guarding the valley entrance. It sees your panic and charges!", false);
+        // Immediate death scenario
+        setTimeout(() => {
+            updateStory("The beast's charge is unstoppable. Your journey ends here in a flash of dust and terror. (DEATH)", true, true);
+        }, 500);
+    }
+
+    // --- Endings ---
+
+    function drink_spring() {
+        updateStory("The water tastes impossibly sweet. A wave of clarity washes over you, banishing fear. The shadowy figure nods slowly, then melts back into the trees. You feel stronger. (VICTORY)", true);
+    }
+
+    function ignore_spring() {
+        updateStory("You press on, ignoring the strange offering. The woods grow denser, the silence heavier. You wander until exhaustion claims you. (DEATH)", true, true);
+    }
+
+    function fight_thicket() {
+        updateStory("You slash through the vines, but the thorns are laced with a paralyzing toxin. You collapse, unable to move. (DEATH)", true, true);
+    }
+
+    function rest_thicket() {
+        updateStory("In the clearing, you find a small, glowing mushroom. Consuming it grants you visions of the path forward, leading you safely out of the woods. (VICTORY)", true);
+    }
+
+    function approach_village() {
+        updateStory("The villagers, seeing your peaceful demeanor, welcome you into their meager shelter. They share their knowledge and guide you to safety. (VICTORY)", true);
+    }
+
+    function circle_village() {
+        updateStory("Your suspicious circling is interpreted as a threat. The villagers raise their spears, seeing only an intruder. (DEATH)", true, true);
+    }
+
+    // Initialize the game by setting the initial state (which is handled by the HTML setup, but we ensure the functions are available)
+    window.makeDecision = makeDecision;
+    window.moss_path = moss_path;
+    window.dark_thicket = dark_thicket;
+    window.cautious_light = cautious_light;
+    window.run_light = run_light;
+    window.drink_spring = drink_spring;
+    window.ignore_spring = ignore_spring;
+    window.fight_thicket = fight_thicket;
+    window.rest_thicket = rest_thicket;
+    window.approach_village = approach_village;
+    window.circle_village = circle_village;
+
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const source=process.argv[2],name=process.argv[3],classification=process.argv[4]??'baseline';
+if(!source||!name||!/^[a-z0-9-]+$/.test(name))throw new Error('Provide a summary path and a lowercase report name.');
+const summary=JSON.parse(await fs.readFile(path.resolve(source)));if(!summary.finished)throw new Error('The run has not finished.');
+const selected={...summary,classification,sourceFiles:summary.sourceFiles.map(f=>({...f})),results:summary.results.map(r=>{const {taskId,...safe}=r;return safe;})};
+const text=JSON.stringify(selected,null,2).replaceAll(root.replaceAll('\\','/'),'<workspace>').replaceAll(root.replaceAll('\\','\\\\'),'<workspace>');
+await fs.mkdir(path.join(root,'docs/benchmarks'),{recursive:true});await fs.writeFile(path.join(root,'docs/benchmarks',name+'.json'),text+'\n');
+const rows=summary.results.map(r=>`| ${r.case} | ${r.passed?'PASS':'FAIL'} | ${r.taskStatus} | ${(r.wallMs/1000).toFixed(1)} | ${r.budget?.usedSteps??'—'} | ${r.budget?.usedTokens??'—'} | ${r.compactions??'—'} |`).join('\n');
+await fs.writeFile(path.join(root,'docs/benchmarks',name+'.md'),`# ${name}\n\nClassification: **${classification}**. ${summary.passed}/${summary.total} outcome checks passed. ${summary.failed} failed. See the [machine-readable record](${name}.json) for exact assertions, source/dependency hashes, outputs and timing samples.\n\n${summary.hardware.cpu}; ${(summary.hardware.ramBytes/1073741824).toFixed(1)} GiB RAM; ${summary.hardware.platform} ${summary.hardware.arch}; context ${summary.config.context}; CPU threads ${summary.config.threads}; K/V ${summary.config.kvK}/${summary.config.kvV}. ${summary.repetitions} repetition(s), starting seed ${summary.config.seedStart}.\n\n| Case | Outcome | Task state | Wall seconds | Calls | Output tokens | Compactions |\n|---|---|---|---:|---:|---:|---:|\n${rows}\n\n${summary.limitations.map(s=>'- '+s).join('\n')}\n\nA blocked or budget-limited task is not a successful task; the missing-page negative case explicitly expects an honest failure. No result on this machine qualifies low-memory systems.\n`);
+console.log('Published sanitized report '+name);

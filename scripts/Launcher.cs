@@ -88,10 +88,10 @@ internal sealed class TomResident : ApplicationContext {
   }
   void Safe(Action action){try{action();}catch(Exception e){MessageBox.Show(e.Message,"Tom");}}
   void ShowAsk(string selection){if(popup!=null&&!popup.IsDisposed){popup.Activate();return;}popup=new AskWindow(selection,null);popup.Show();popup.Activate();}
-  void Status(bool running){try{File.WriteAllText(Path.Combine(TomLauncher.Root,".state","native-status.json"),TomLauncher.Json.Serialize(new {pid=Process.GetCurrentProcess().Id,running=running,hotkeyRegistered=running&&hotkey.Registered,shortcut="Ctrl Alt T",version="0.5.0"}));}catch{}}
+  void Status(bool running){try{File.WriteAllText(Path.Combine(TomLauncher.Root,".state","native-status.json"),TomLauncher.Json.Serialize(new {pid=Process.GetCurrentProcess().Id,running=running,hotkeyRegistered=running&&hotkey.Registered,shortcut="Ctrl Alt T",version="0.5.2"}));}catch{}}
   protected override void ExitThreadCore(){Status(false);hotkey.Dispose();tray.Visible=false;tray.Dispose();icon.Dispose();base.ExitThreadCore();}
   [DllImport("user32.dll")] static extern bool DestroyIcon(IntPtr handle);
-  static Icon KernelIcon(){using(Bitmap b=new Bitmap(32,32)){using(Graphics g=Graphics.FromImage(b)){g.Clear(Color.Transparent);using(Pen p=new Pen(TomLauncher.Emerald,2)){g.DrawRectangle(p,4,4,24,24);}using(Brush brush=new SolidBrush(TomLauncher.Emerald)){g.FillRectangle(brush,10,10,4,4);g.FillRectangle(brush,18,10,4,4);g.FillRectangle(brush,10,18,4,4);g.FillRectangle(brush,18,18,4,4);}}IntPtr h=b.GetHicon();Icon copy=(Icon)Icon.FromHandle(h).Clone();DestroyIcon(h);return copy;}}
+  static Icon KernelIcon(){using(Bitmap b=new Bitmap(32,32)){using(Graphics g=Graphics.FromImage(b)){g.Clear(Color.Transparent);using(Pen p=new Pen(TomLauncher.Emerald,2)){g.DrawRectangle(p,4,4,24,24);}using(Brush brush=new SolidBrush(TomLauncher.Emerald))using(Font font=new Font("Consolas",9,FontStyle.Bold,GraphicsUnit.Pixel))using(var format=new StringFormat{Alignment=StringAlignment.Center,LineAlignment=StringAlignment.Center}){g.DrawString("o.o",font,brush,new RectangleF(3,4,26,21),format);for(int i=0;i<3;i++)g.FillEllipse(brush,10+i*5,24,2,2);}}IntPtr h=b.GetHicon();Icon copy=(Icon)Icon.FromHandle(h).Clone();DestroyIcon(h);return copy;}}
 }
 internal sealed class HotkeyWindow : NativeWindow,IDisposable {
   [DllImport("user32.dll",SetLastError=true)] static extern bool RegisterHotKey(IntPtr h,int id,uint mods,uint key);

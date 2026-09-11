@@ -1,5 +1,7 @@
 {
   "name": "Tom",
-  "version": "0.5.0",
+  "version": "0.5.2",
+  "channel": "beta",
+  "repository": "https://github.com/OsbornVentures/Tom",
   "defaultTheme": "night"
 }

@@ -1,0 +1,11 @@
+Tom
+Copyright 2026 OsbornVentures
+
+Tom's original source code is licensed under the Apache License, Version 2.0.
+Third-party models, libraries, system software, names, logos, and artwork retain
+their respective licenses and trademark rights. See THIRD_PARTY_NOTICES.md.
+
+Gemma 4 is developed by Google DeepMind. llama.cpp is a separate inference
+engine; Tom does not bundle Meta's Llama model. No third-party endorsement is
+claimed. The supplied Gemma identifying artwork is excluded from Tom's own
+source-code license grant.

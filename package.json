@@ -1,6 +1,6 @@
 {
   "name": "tom-desktop",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "private": true,
   "type": "module",
   "description": "Tom. Local personal assistant development build.",
@@ -12,5 +12,10 @@
     "test": "node --test tests/*.test.mjs",
     "benchmark": "node scripts/benchmark.mjs",
     "check": "node scripts/check.mjs"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OsbornVentures/Tom.git"
   }
 }

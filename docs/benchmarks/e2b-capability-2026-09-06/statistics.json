@@ -1,0 +1,366 @@
+{
+  "created": "2026-09-06T16:26:11.657Z",
+  "classification": "exploratory; developer-authored; not independently peer-reviewed",
+  "scorerVersion": "tom-capability-scorer-v2-fixture-commonjs",
+  "scoreCorrections": [
+    {
+      "case": "paginate",
+      "seed": 42,
+      "arm": "aider",
+      "original": false,
+      "corrected": true
+    },
+    {
+      "case": "sum-money",
+      "seed": 43,
+      "arm": "aider",
+      "original": false,
+      "corrected": true
+    },
+    {
+      "case": "paginate",
+      "seed": 43,
+      "arm": "aider",
+      "original": false,
+      "corrected": true
+    }
+  ],
+  "aggregate": {
+    "direct": {
+      "n": 16,
+      "passed": 11,
+      "completedPassed": 11,
+      "completedIncorrect": 5,
+      "statusCounts": {
+        "complete": 16
+      },
+      "outputTokens": 1283
+    },
+    "minimal": {
+      "n": 16,
+      "passed": 7,
+      "completedPassed": 7,
+      "completedIncorrect": 7,
+      "statusCounts": {
+        "complete": 14,
+        "budget": 1,
+        "error": 1
+      },
+      "outputTokens": 3026
+    },
+    "tom": {
+      "n": 16,
+      "passed": 6,
+      "completedPassed": 6,
+      "completedIncorrect": 10,
+      "statusCounts": {
+        "complete": 16
+      },
+      "outputTokens": 3746
+    },
+    "aider": {
+      "n": 16,
+      "passed": 14,
+      "completedPassed": 14,
+      "completedIncorrect": 2,
+      "statusCounts": {
+        "complete": 16
+      },
+      "outputTokens": 4434
+    }
+  },
+  "byCategory": {
+    "software-repair": {
+      "direct": {
+        "n": 8,
+        "passed": 5,
+        "completedPassed": 5,
+        "completedIncorrect": 3,
+        "statusCounts": {
+          "complete": 8
+        },
+        "outputTokens": 1075
+      },
+      "minimal": {
+        "n": 8,
+        "passed": 3,
+        "completedPassed": 3,
+        "completedIncorrect": 5,
+        "statusCounts": {
+          "complete": 8
+        },
+        "outputTokens": 2193
+      },
+      "tom": {
+        "n": 8,
+        "passed": 0,
+        "completedPassed": 0,
+        "completedIncorrect": 8,
+        "statusCounts": {
+          "complete": 8
+        },
+        "outputTokens": 2621
+      },
+      "aider": {
+        "n": 8,
+        "passed": 6,
+        "completedPassed": 6,
+        "completedIncorrect": 2,
+        "statusCounts": {
+          "complete": 8
+        },
+        "outputTokens": 3376
+      }
+    },
+    "data-transform": {
+      "direct": {
+        "n": 4,
+        "passed": 4,
+        "completedPassed": 4,
+        "completedIncorrect": 0,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 104
+      },
+      "minimal": {
+        "n": 4,
+        "passed": 2,
+        "completedPassed": 2,
+        "completedIncorrect": 1,
+        "statusCounts": {
+          "complete": 3,
+          "budget": 1
+        },
+        "outputTokens": 583
+      },
+      "tom": {
+        "n": 4,
+        "passed": 2,
+        "completedPassed": 2,
+        "completedIncorrect": 2,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 536
+      },
+      "aider": {
+        "n": 4,
+        "passed": 4,
+        "completedPassed": 4,
+        "completedIncorrect": 0,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 629
+      }
+    },
+    "file-integrity": {
+      "direct": {
+        "n": 4,
+        "passed": 2,
+        "completedPassed": 2,
+        "completedIncorrect": 2,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 104
+      },
+      "minimal": {
+        "n": 4,
+        "passed": 2,
+        "completedPassed": 2,
+        "completedIncorrect": 1,
+        "statusCounts": {
+          "error": 1,
+          "complete": 3
+        },
+        "outputTokens": 250
+      },
+      "tom": {
+        "n": 4,
+        "passed": 4,
+        "completedPassed": 4,
+        "completedIncorrect": 0,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 589
+      },
+      "aider": {
+        "n": 4,
+        "passed": 4,
+        "completedPassed": 4,
+        "completedIncorrect": 0,
+        "statusCounts": {
+          "complete": 4
+        },
+        "outputTokens": 429
+      }
+    }
+  },
+  "comparisons": {
+    "minimal": {
+      "delta": -0.0625,
+      "wins": 2,
+      "losses": 3,
+      "ties": 11,
+      "exploratoryTaskClusterBootstrap95": [
+        -0.4375,
+        0.3125
+      ],
+      "bootstrapReplicates": 20000
+    },
+    "direct": {
+      "delta": -0.3125,
+      "wins": 2,
+      "losses": 7,
+      "ties": 7,
+      "exploratoryTaskClusterBootstrap95": [
+        -0.75,
+        0.1875
+      ],
+      "bootstrapReplicates": 20000
+    },
+    "aider": {
+      "delta": -0.5,
+      "wins": 0,
+      "losses": 8,
+      "ties": 8,
+      "exploratoryTaskClusterBootstrap95": [
+        -0.875,
+        -0.125
+      ],
+      "bootstrapReplicates": 20000
+    }
+  },
+  "uniqueTasks": 8,
+  "repetitions": 2,
+  "totalTrials": 64,
+  "model": {
+    "id": "gemma-4-e2b",
+    "name": "Gemma 4 E2B",
+    "revision": "675cff42a74c774d6cb76f76d8eacb49b48c9b93",
+    "path": "models/gemma-4-E2B_q4_0-it.gguf",
+    "bytes": 3349516256,
+    "sha256": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634"
+  },
+  "hardware": {
+    "cpu": "Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz",
+    "logicalProcessors": 8,
+    "ramBytes": 34276474880,
+    "os": "10.0.26100",
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.19.0"
+  },
+  "config": {
+    "adapter": "llama.cpp",
+    "dispatchVersion": "tom-dispatch-v1",
+    "revision": "b10809 / 5266f24da",
+    "executable": "runtime/llama/llama-server.exe",
+    "sha256": "cb29f66008d4d73cce17cab2c2569ab318eb244b0b2ca2a15024b44d90dfcd3f",
+    "model": {
+      "id": "gemma-4-e2b",
+      "name": "Gemma 4 E2B",
+      "revision": "675cff42a74c774d6cb76f76d8eacb49b48c9b93",
+      "path": "models/gemma-4-E2B_q4_0-it.gguf",
+      "bytes": 3349516256,
+      "sha256": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634"
+    },
+    "vision": {
+      "path": "models/gemma-4-E2B-it-mmproj.gguf",
+      "bytes": 986833664,
+      "sha256": "021059cce659fe7f9170d5599761d7bbaf644b798dab9503aca30dc43e6beb14",
+      "modelRevision": "675cff42a74c774d6cb76f76d8eacb49b48c9b93"
+    },
+    "context": 4096,
+    "threads": 2,
+    "gpuLayers": 0,
+    "idleUnloadMs": 300000,
+    "cacheTypeK": "q8_0",
+    "cacheTypeV": "q8_0",
+    "flashAttention": "on",
+    "temperature": 0.2,
+    "top_p": 0.95,
+    "top_k": 64,
+    "thinking": false
+  },
+  "budget": {
+    "maxSteps": 24,
+    "maxTokens": 12288,
+    "maxActiveMs": 900000,
+    "maxResponseTokens": 2048
+  },
+  "sourceHash": "c845fbcf709b4fafbe37b45b539d163d98b20b81e1791b415b402ddbd10a8a19",
+  "recallActions": 0,
+  "caseMatrix": [
+    {
+      "case": "sum-money",
+      "direct": 2,
+      "minimal": 0,
+      "tom": 0,
+      "aider": 2
+    },
+    {
+      "case": "merge-ranges",
+      "direct": 0,
+      "minimal": 0,
+      "tom": 0,
+      "aider": 0
+    },
+    {
+      "case": "stable-unique",
+      "direct": 1,
+      "minimal": 2,
+      "tom": 0,
+      "aider": 2
+    },
+    {
+      "case": "paginate",
+      "direct": 2,
+      "minimal": 1,
+      "tom": 0,
+      "aider": 2
+    },
+    {
+      "case": "csv-ledger",
+      "direct": 2,
+      "minimal": 2,
+      "tom": 2,
+      "aider": 2
+    },
+    {
+      "case": "join-stock",
+      "direct": 2,
+      "minimal": 0,
+      "tom": 0,
+      "aider": 2
+    },
+    {
+      "case": "exact-copy",
+      "direct": 0,
+      "minimal": 0,
+      "tom": 2,
+      "aider": 2
+    },
+    {
+      "case": "quoted-instruction",
+      "direct": 2,
+      "minimal": 2,
+      "tom": 2,
+      "aider": 2
+    }
+  ],
+  "extensionDiagnostic": {
+    "classification": "post-hoc filename sensitivity diagnostic; excluded from primary scores",
+    "n": 8,
+    "passed": 0,
+    "nonemptyDeliverables": 8,
+    "originalCjsPassed": 0,
+    "originalCjsNonemptyDeliverables": 5,
+    "scoreCorrections": [],
+    "sourceHash": "5f7d3fbe602aafafbdd625353d0f6ec84ae2118209361a5e52a910ccc11669c8",
+    "productionUnchanged": true
+  }
+}

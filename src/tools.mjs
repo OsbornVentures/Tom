@@ -5,13 +5,14 @@ import {constants} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {StringDecoder} from 'node:string_decoder';
+import {setTimeout as delay} from 'node:timers/promises';
 
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export class ToolPreconditionError extends Error {constructor(message){super(message);this.name='ToolPreconditionError';}}
 export function describeAction(action){
  const a=action.arguments;
  if(action.name==='write')return (a.copyFrom?'Applying exact edits to ':'Saving ')+path.basename(a.path);
- if(a.program==='tom-browser'){const get=k=>a.args[a.args.indexOf(k)+1],mode=get('--action');if(mode==='search')return 'Searching '+get('--provider')+' for “'+get('--query')+'”';if(mode==='read')return 'Reading '+get('--url');if(mode==='inspect')return 'Inspecting '+(a.args.includes('--file')?path.basename(get('--file')):get('--url'))+' in the browser';}
+ if(a.program==='tom-browser'){const get=k=>a.args[a.args.indexOf(k)+1],mode=get('--action');if(mode==='search')return 'Searching the web for “'+get('--query')+'”';if(mode==='read')return 'Reading '+get('--url');if(mode==='inspect')return 'Inspecting '+(a.args.includes('--file')?path.basename(get('--file')):get('--url'))+' in the browser';}
  if(a.program==='cat')return 'Reading '+a.args.join(', ');
  if(a.program==='tom-recall')return 'Reading saved task evidence';
  return 'Running '+path.basename(a.program);
@@ -43,11 +44,11 @@ export function validateTool(call,preferences={}) {
       // browser adapter shorthand; native program arguments are never rewritten.
       if(a.args.length===1&&a.args[0].trim()&&!a.args[0].startsWith('--')){
         const original=[...a.args],subject=a.args[0];
-        a.args=/^https?:\/\//i.test(subject)?['--action','read','--url',subject,'--browser',preferences.browser??'edge']:['--action','search','--query',subject,'--provider',preferences.search??'duckduckgo','--browser',preferences.browser??'edge'];
+        a.args=/^https?:\/\//i.test(subject)?['--action','read','--url',subject,'--browser',preferences.browser??'edge']:['--action','search','--query',subject,'--provider',preferences.search??'google','--browser',preferences.browser??'edge'];
         normalization={requested:original,expanded:a.args,reason:'Browser query/URL shorthand'};
       }
       const allowed=['--action','--query','--provider','--browser','--url','--file','--output','--allow-unverified'],options={};
-      if(a.args.length%2||a.args.some((v,i)=>i%2===0&&!allowed.includes(v)))throw new Error('Invalid browser arguments. Use program tom-browser with args ["--action","search","--query","your keywords","--provider","bing","--browser","edge"] for search, or ["--action","read","--url","https://actual-page-url"] for reading. No browser ran.');
+      if(a.args.length%2||a.args.some((v,i)=>i%2===0&&!allowed.includes(v)))throw new Error('Invalid browser arguments. Use program tom-browser with args ["--action","search","--query","your keywords","--provider","google","--browser","edge"] for search, or ["--action","read","--url","https://actual-page-url"] for reading. No browser ran.');
       for(let i=0;i<a.args.length;i+=2){if(options[a.args[i]]!==undefined)throw new Error('Duplicate browser option: '+a.args[i]);options[a.args[i]]=a.args[i+1];}
       const mode=options['--action'];if(!['search','read','inspect','screenshot'].includes(mode))throw new Error('Browser args need --action followed by search, read, inspect, or screenshot. No browser ran.');
       if(mode==='search'?!options['--query']?.trim():!options['--url']&&!options['--file'])throw new Error(mode==='search'?'Search needs --query followed by the query as ONE string argument.':'Reading needs --url followed by a page URL, or --file followed by an HTML file path.');
@@ -109,7 +110,13 @@ export async function writeTool(a, cwd, snapshots, signal) {
   if ((latest===null?'new':hash(latest)) !== a.expectedHash.toLowerCase()) throw new ToolPreconditionError('A concurrent edit was detected. Nothing was written.');
   await mkdir(path.dirname(target), {recursive:true});
   const temp = target+'.tom-'+randomUUID()+'.partial';
-  try { await writeFile(temp, a.content, {flag:'wx',encoding:'utf8'}); signal?.throwIfAborted(); if(before===null){try{await link(temp,target);}catch(e){if(!['EPERM','ENOTSUP','ENOSYS'].includes(e.code))throw e;await copyFile(temp,target,constants.COPYFILE_EXCL);}}else await rename(temp, target); }
+  try { await writeFile(temp, a.content, {flag:'wx',encoding:'utf8'}); signal?.throwIfAborted(); if(before===null){try{await link(temp,target);}catch(e){if(!['EPERM','ENOTSUP','ENOSYS'].includes(e.code))throw e;await copyFile(temp,target,constants.COPYFILE_EXCL);}}else {
+    for(let attempt=0;;attempt++){
+      signal?.throwIfAborted();
+      if(hash(await readFile(target))!==a.expectedHash.toLowerCase())throw new ToolPreconditionError('A concurrent edit was detected before commit. Nothing was written.');
+      try{await rename(temp,target);break;}catch(e){if(process.platform!=='win32'||!['EPERM','EACCES','EBUSY'].includes(e.code)||attempt>=5)throw e;await delay(25*2**attempt,undefined,{signal});}
+    }
+  } }
   finally { await unlink(temp).catch(()=>{}); }
   const result = await readFile(target);
   if(hash(result)!==hash(a.content)) throw new Error('The file was written but verification failed. Inspect before continuing.');
@@ -127,7 +134,7 @@ export function shellTool(a, cwd, signal, onOutput = ()=>{},taskId=null) {
       if(process.platform==='win32') { const killer=spawn('taskkill.exe',['/PID',String(child.pid),'/T','/F'],{windowsHide:true,stdio:'ignore'}); killer.on('error',()=>child.kill());killer.on('close',code=>{if(code!==0)child.kill();}); }
       else child.kill('SIGKILL');
     };
-    const timer=setTimeout(()=>{timedOut=true;terminate();},(a.timeoutSeconds??45)*1000);
+    const timer=setTimeout(()=>{timedOut=true;terminate();},(a.timeoutSeconds??(a.program==='tom-browser'?80:45))*1000);
     const abort=()=>terminate(); signal?.addEventListener('abort',abort,{once:true});
     const receive=data=>{ const s=data.toString('utf8');if(!s)return; total+=Buffer.byteLength(s); if(output.length<16000) { const part=s.slice(0,16000-output.length); output+=part;onOutput(part); } if(total>4*1024*1024)terminate(); };
     const stdoutDecoder=new StringDecoder('utf8'),stderrDecoder=new StringDecoder('utf8');

@@ -1,5 +1,18 @@
 # Development changes
 
+## 0.5.2 beta
+
+- Compact avatar/name/context/actions header, nine ASCII activity states, richer ready expressions and merging compaction lines.
+- Truthful startup gate, preferred-name setup, local file opening, expanded offline AI FAQ, stack credits and Apache 2.0 source license.
+- Manual GitHub update checks and refreshed Offline/Network installers that preserve existing user data.
+- Microsoft Visual C++ is a separately installed prerequisite; development runtime DLLs are excluded.
+- See [release notes](docs/RELEASE-0.5.2.md) and [measured results](docs/benchmarks/0.5.2.md).
+
+## 0.5.1 development
+
+- Single-file Offline/Network setup, repair and uninstall; performance recovery and a revised action harness.
+- Preserved public development trials document both improvements and remaining failures.
+
 ## 0.5.0
 
 - Conversational current-fact questions now require an actual browser attempt. A bare follow-up such as “search the web for it” resolves its subject from earlier user messages, not model answers or search results.

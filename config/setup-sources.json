@@ -1,0 +1,5 @@
+{
+  "node": {"url":"https://nodejs.org/dist/v24.19.0/win-x64/node.exe","sha256":"3602f2bb1a10f2cbab4c36886218a33c1ab3db87290e73b033c46c77147d0237"},
+  "cpu": {"url":"https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cpu-x64.zip","sha256":"9df3158ed228a641a4b127942d7f459f24c9e13f04682659d05c00c80099b6b5"},
+  "vulkan": {"url":"https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-vulkan-x64.zip","sha256":"97e50b3ef0cdd2cb4d5afd446a9006b3496bee6c0d0ba7083d32f36075771870"}
+}

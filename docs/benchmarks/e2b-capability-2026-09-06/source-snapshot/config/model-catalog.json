@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "checked": "2026-09-05T17:17:16.843Z",
+  "models": [
+    {
+      "id": "gemma-4-e4b",
+      "name": "Gemma 4 E4B",
+      "repo": "google/gemma-4-E4B-it-qat-q4_0-gguf",
+      "revision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c",
+      "workRatio": 2,
+      "model": {
+        "filename": "gemma-4-E4B_q4_0-it.gguf",
+        "bytes": 5154941280,
+        "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+        "path": "models/gemma-4-E4B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-E4B-it-mmproj.gguf",
+        "bytes": 991552256,
+        "sha256": "7498a37cb619e55f2fcf87eb931f56e99389ed6d432e4c5c66110694c0d65578",
+        "path": "models/gemma-4-E4B-it-mmproj.gguf",
+        "modelRevision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c"
+      },
+      "minAvailableGiB": 8,
+      "source": "https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf"
+    },
+    {
+      "id": "gemma-4-12b",
+      "name": "Gemma 4 12B",
+      "repo": "google/gemma-4-12B-it-qat-q4_0-gguf",
+      "revision": "29d097773436b69ff9feafd636ab4cf873786537",
+      "workRatio": 6,
+      "model": {
+        "filename": "gemma-4-12b-it-qat-q4_0.gguf",
+        "bytes": 6975879296,
+        "sha256": "93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b",
+        "path": "models/gemma-4-12b-it-qat-q4_0.gguf"
+      },
+      "vision": {
+        "filename": "mmproj-gemma-4-12b-it-qat-q4_0.gguf",
+        "bytes": 175115616,
+        "sha256": "cb018338a7538a9814d994bfe54644c71eb7ed54e31eae2f721e45fd3c260da7",
+        "path": "models/mmproj-gemma-4-12b-it-qat-q4_0.gguf",
+        "modelRevision": "29d097773436b69ff9feafd636ab4cf873786537"
+      },
+      "minAvailableGiB": 9,
+      "source": "https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf"
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "name": "Gemma 4 26B A4B",
+      "repo": "google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
+      "revision": "d1c082be9cf3c8a514acf63b8761f4b41935842e",
+      "workRatio": 3.5,
+      "model": {
+        "filename": "gemma-4-26B_q4_0-it.gguf",
+        "bytes": 14439363584,
+        "sha256": "3eca3b8f6d7baf218a7dd6bba5fb59a56ee25fe2d567b6f5f589b4f697eca51d",
+        "path": "models/gemma-4-26B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-26B-it-mmproj.gguf",
+        "bytes": 1194828160,
+        "sha256": "a359953a076b877db30c31dbbb4c6d93b4a6e017ee5db5784247e4d4c0dd4f3b",
+        "path": "models/gemma-4-26B-it-mmproj.gguf",
+        "modelRevision": "d1c082be9cf3c8a514acf63b8761f4b41935842e"
+      },
+      "minAvailableGiB": 17,
+      "source": "https://huggingface.co/google/gemma-4-26B-A4B-it-qat-q4_0-gguf"
+    },
+    {
+      "id": "gemma-4-31b",
+      "name": "Gemma 4 31B",
+      "repo": "google/gemma-4-31B-it-qat-q4_0-gguf",
+      "revision": "59dde24573e7e61570dba08b18a2e1fe246955ed",
+      "workRatio": 15.5,
+      "model": {
+        "filename": "gemma-4-31B_q4_0-it.gguf",
+        "bytes": 17651001568,
+        "sha256": "179cfb99212709597eae5929112cfca677e1bbf566178b479ae1da0c4772874b",
+        "path": "models/gemma-4-31B_q4_0-it.gguf"
+      },
+      "vision": {
+        "filename": "gemma-4-31B-it-mmproj.gguf",
+        "bytes": 1200726368,
+        "sha256": "6bd60bdb958548b4093196d38744b0f2290c12503a3fddd7486bffa9c5eb07a4",
+        "path": "models/gemma-4-31B-it-mmproj.gguf",
+        "modelRevision": "59dde24573e7e61570dba08b18a2e1fe246955ed"
+      },
+      "minAvailableGiB": 20,
+      "source": "https://huggingface.co/google/gemma-4-31B-it-qat-q4_0-gguf"
+    }
+  ]
+}

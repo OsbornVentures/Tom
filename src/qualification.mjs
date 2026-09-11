@@ -4,9 +4,11 @@ import fs from 'node:fs/promises';
 import {createReadStream} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {Runtime} from './runtime.mjs';
-import {toolDefinitions,validateTool} from './tools.mjs';
+import {definitions,version as harnessVersion} from './harness/protocol.mjs';
+const toolDefinitions=definitions(['files']).filter(t=>t.function.name==='write');
+const validateTool=call=>({name:call.name,arguments:JSON.parse(call.arguments)});
 const GiB=1073741824;
-export const fingerprint=(config)=>createHash('sha256').update(JSON.stringify({host:os.hostname(),cpu:os.cpus()[0]?.model,threads:os.cpus().length,ram:os.totalmem(),arch:os.arch(),platform:os.platform(),runtime:config.sha256,model:config.model.sha256,dispatch:config.dispatchVersion})).digest('hex');
+export const fingerprint=(config)=>createHash('sha256').update(JSON.stringify({host:os.hostname(),cpu:os.cpus()[0]?.model,threads:os.cpus().length,ram:os.totalmem(),arch:os.arch(),platform:os.platform(),runtime:config.sha256,model:config.model.sha256,dispatch:harnessVersion})).digest('hex');
 const readJSON=async file=>JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));
 async function digest(file){const h=createHash('sha256');for await(const b of createReadStream(file))h.update(b);return h.digest('hex');}
 export function candidateDecision(model,report,availableGiB,diskGiB,policy){
@@ -15,18 +17,26 @@ export function candidateDecision(model,report,availableGiB,diskGiB,policy){
  return {...model,eligible:!reasons.length,predictedDecodeTps:Math.round(predicted*10)/10,downloadBytes:bytes,reasons,reason:reasons.join(' · ')||'Eligible for a download and local trial. Activation requires a pass.'};
 }
 export class Qualification {
- constructor(root,config,store,runtime,engine){Object.assign(this,{root,config,store,runtime,engine});this.running=false;this.events=[];this.report=null;this.offers=[];this.online=null;this.controller=null;}
- async init(){this.policy=await readJSON(path.join(this.root,'config/qualification-policy.json'));this.catalog=await readJSON(path.join(this.root,'config/model-catalog.json'));try{this.report=await readJSON(path.join(this.root,'.state/qualification.json'));}catch{}try{this.upgradeResult=await readJSON(path.join(this.root,'.state/upgrade-result.json'));}catch{}return this;}
+ constructor(root,config,store,runtime,engine){Object.assign(this,{root,config,store,runtime,engine});this.running=false;this.events=[];this.report=null;this.offers=[];this.online=null;this.controller=null;this.trials={};}
+ async init(){this.policy=await readJSON(path.join(this.root,'config/qualification-policy.json'));this.catalog=await readJSON(path.join(this.root,'config/model-catalog.json'));try{this.report=await readJSON(path.join(this.root,'.state/qualification.json'));}catch{}try{this.upgradeResult=await readJSON(path.join(this.root,'.state/upgrade-result.json'));}catch{}try{this.trials=await readJSON(path.join(this.root,'.state/model-trials.json'));}catch{}if(this.upgradeResult?.id&&!this.trials[this.upgradeResult.id])this.trials[this.upgradeResult.id]=this.upgradeResult;return this;}
+ resultFor(id){return this.trials[id]??(this.upgradeResult?.id===id?this.upgradeResult:null);}
+ async recordTrial(result){
+   // Preserve the active model's qualification when another candidate is tried.
+   if(this.upgradeResult?.id&&!this.trials[this.upgradeResult.id])this.trials[this.upgradeResult.id]=this.upgradeResult;
+   this.trials[result.id]=result;
+   const file=path.join(this.root,'.state/model-trials.json');await fs.writeFile(file+'.tmp',JSON.stringify(this.trials,null,2));await fs.rename(file+'.tmp',file);
+   await fs.writeFile(path.join(this.root,'.state/upgrade-result.json'),JSON.stringify(result,null,2));this.upgradeResult=result;
+ }
  status(){return {running:this.running,events:this.events.slice(-60),report:this.report,offers:this.offers,online:this.online,policy:this.policy,upgrade:this.upgradeResult??null,currentModel:this.runtime.config.model.name};}
  needsFirstRun(){return this.report?.fingerprint!==fingerprint(this.config);}
- event(text,detail={}){this.events.push({time:new Date().toISOString(),text,...detail});if(this.events.length>100)this.events.shift();}
+ event(text,detail={}){const event={time:new Date().toISOString(),text,...detail};this.events.push(event);if(this.events.length>100)this.events.shift();this.onEvent?.(event);}
  cancel(){this.controller?.abort(new Error('System check cancelled. Your current model stays selected.'));}
  async stop(){this.cancel();await this.worker?.stop();}
  async identity(){await fs.writeFile(path.join(this.root,'.state/identity.json'),JSON.stringify({name:this.runtime.config.model.name}));}
  async restoreForComputer(){
-   const result=this.upgradeResult;
+   const result=this.resultFor(this.runtime.config.model.id);
    if(this.runtime.config.model.id!==this.config.model.id&&(!result?.passed||result.id!==this.runtime.config.model.id||result.fingerprint!==fingerprint(this.runtime.config))){this.runtime.config={...this.config};this.store.saveSettings({activeModel:null,activeModelConfig:null,inference:{context:this.config.context,threads:this.config.threads,idleUnloadMs:this.config.idleUnloadMs}});}
-   if(result&&result.fingerprint!==fingerprint(result.config))this.upgradeResult=null;
+   if(this.upgradeResult&&this.upgradeResult.fingerprint!==fingerprint(this.upgradeResult.config))this.upgradeResult=null;
    if(this.needsFirstRun()){this.runtime.config.context=4096;this.runtime.config.threads=Math.max(1,Math.min(4,os.availableParallelism()-1));}
    await this.identity();
  }
@@ -48,7 +58,7 @@ export class Qualification {
      const speed=await call([{role:'user',content:'Write a numbered list from 1 to 20. Each line must contain the words local task ready. No introduction or conclusion.'}],[],160);report.metrics={...report.metrics,...speed.observed,generatedTokens:speed.usage?.completion_tokens??0};report.checks.push({name:'decode',passed:(speed.usage?.completion_tokens??0)>=60});
      this.event('Checking tool formatting · no command will be executed');
      const tool=await call([{role:'user',content:'Use the write tool to create a new file named tom-probe.txt containing exactly CEDAR-17. Do not add any other content.'}],toolDefinitions,180);
-     let toolPass=false;try{const a=validateTool(tool.tool_calls?.[0]?.function);toolPass=a.name==='write'&&a.arguments.path==='tom-probe.txt'&&a.arguments.content.trim()==='CEDAR-17'&&a.arguments.expectedHash==='new';}catch{}
+     let toolPass=false;try{const a=validateTool(tool.tool_calls?.[0]?.function);toolPass=a.name==='write'&&a.arguments.path==='tom-probe.txt'&&a.arguments.content.trim()==='CEDAR-17'&&!a.arguments.base;}catch{}
      report.checks.push({name:'tool-format',passed:toolPass});
      for(const context of extended?[4096,8192]:[4096]){
        if(worker.config.context!==context){await worker.stop();worker.config.context=context;await worker.ensure(false,signal,(kind,text)=>this.event(text));}
@@ -85,13 +95,13 @@ export class Qualification {
    try{this.event('Testing '+offer.name+' on this CPU');const started=Date.now();await worker.ensure(false,signal,(kind,text)=>this.event(text));const loadMs=Date.now()-started;
      const begin=Date.now(),a=await worker.complete([{role:'user',content:'Write a numbered list from 1 to 20. Each line says local task ready.'}],[],signal,d=>{if(d.kind==='text'){first||=Date.now();last=Date.now();}},{maxTokens:160});
      const tps=(a.usage?.completion_tokens-1)/Math.max(.001,(last-first)/1000);const t=await worker.complete([{role:'user',content:'Use write to create a new file tom-probe.txt containing exactly CEDAR-17.'}],toolDefinitions,signal,()=>{},{maxTokens:180});let tool;try{tool=validateTool(t.tool_calls?.[0]?.function);}catch{}
-     passed=(a.usage?.completion_tokens??0)>=60&&first>0&&tps>=this.policy.minimumDecodeTps&&first-begin<=this.policy.maximumFirstTokenMs&&loadMs<=this.policy.maximumLoadMs&&os.freemem()/GiB>=this.policy.minimumFreeGiB&&tool?.name==='write'&&tool.arguments.content.trim()==='CEDAR-17'&&tool.arguments.path==='tom-probe.txt'&&tool.arguments.expectedHash==='new';
+     passed=(a.usage?.completion_tokens??0)>=60&&first>0&&tps>=this.policy.minimumDecodeTps&&first-begin<=this.policy.maximumFirstTokenMs&&loadMs<=this.policy.maximumLoadMs&&os.freemem()/GiB>=this.policy.minimumFreeGiB&&tool?.name==='write'&&tool.arguments.content.trim()==='CEDAR-17'&&tool.arguments.path==='tom-probe.txt'&&!tool.arguments.base;
      // Vision must pass too before this package can replace the multimodal E2B route.
      if(passed){this.event('Checking the matching vision projector');await worker.ensure(true,signal,(kind,text)=>this.event(text));const image='data:image/png;base64,'+(await fs.readFile(path.join(this.root,'config/vision-probe.png'))).toString('base64');const v=await worker.complete([{role:'user',content:[{type:'image_url',image_url:{url:image}},{type:'text',text:'Name the two shapes, their colors, and the large text.'}]}],[],signal,()=>{},{maxTokens:100});passed=/red/i.test(v.content)&&/square/i.test(v.content)&&/blue/i.test(v.content)&&/circle/i.test(v.content)&&/TOM\s*42/i.test(v.content);}
      reason=passed?'Text, tools, vision and headroom passed. Ready for your choice.':'The candidate did not pass every threshold. E2B remains selected.';
-     const result={id,passed,reason,decodeTps:tps,config:candidate,time:new Date().toISOString(),fingerprint:fingerprint(candidate)};await fs.writeFile(path.join(this.root,'.state/upgrade-result.json'),JSON.stringify(result,null,2));this.upgradeResult=result;this.event(reason);return result;
+     const result={id,passed,reason,decodeTps:tps,config:candidate,time:new Date().toISOString(),fingerprint:fingerprint(candidate)};await this.recordTrial(result);this.event(reason);return result;
    }finally{clearInterval(monitor);await worker.stop();this.worker=null;}
  });}
- async activate(id){if(this.running||this.engine.active)throw new Error('Pause the current task first.');const result=this.upgradeResult??await readJSON(path.join(this.root,'.state/upgrade-result.json')).catch(()=>null);if(!result?.passed||result.id!==id||result.fingerprint!==fingerprint(result.config))throw new Error('This package has not passed on this computer.');await this.runtime.stop();this.runtime.config={...result.config,logPath:'.state/runtime.log'};this.store.saveSettings({activeModel:id,activeModelConfig:this.runtime.config,inference:{context:4096,threads:this.runtime.config.threads}});await this.identity();this.event('Now using '+this.runtime.config.model.name);return {name:this.runtime.config.model.name};}
+ async activate(id){if(this.running||this.engine.active)throw new Error('Pause the current task first.');const result=this.resultFor(id)??await readJSON(path.join(this.root,'.state/upgrade-result.json')).catch(()=>null);if(!result?.passed||result.id!==id||result.fingerprint!==fingerprint(result.config))throw new Error('This package has not passed on this computer.');await this.runtime.stop();this.runtime.config={...result.config,logPath:'.state/runtime.log'};this.store.saveSettings({activeModel:id,activeModelConfig:this.runtime.config,inference:{context:4096,threads:this.runtime.config.threads}});await this.identity();this.event('Now using '+this.runtime.config.model.name);return {name:this.runtime.config.model.name};}
  contextLimit(){if(this.runtime.config.model.id!==this.config.model.id)return 4096;const fits=os.freemem()/GiB>=1.5;return fits&&this.report?.passed&&this.report.fingerprint===fingerprint(this.config)?Math.max(4096,...this.report.contexts):4096;}
 }

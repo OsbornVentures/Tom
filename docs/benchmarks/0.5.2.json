@@ -1,0 +1,827 @@
+{
+  "version": "0.5.2-beta",
+  "date": "2026-09-11",
+  "scope": "Small developer-visible release trials, not a held-out reliability estimate",
+  "hardware": {
+    "platform": "win32",
+    "arch": "x64",
+    "osRelease": "10.0.26100",
+    "cpu": "Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz",
+    "logicalProcessors": 8,
+    "ramBytes": 34276474880
+  },
+  "config": {
+    "context": 4096,
+    "threads": 4,
+    "kvK": "f16",
+    "kvV": "f16",
+    "gpuLayers": 0,
+    "seedStart": 42
+  },
+  "runtime": {
+    "revision": "b10809 / 5266f24da",
+    "sha256": "cb29f66008d4d73cce17cab2c2569ab318eb244b0b2ca2a15024b44d90dfcd3f",
+    "node": "v24.19.0"
+  },
+  "model": {
+    "id": "gemma-4-e2b",
+    "sha256": "fa401b55b07ee70a54c6dae3903c783a6e65064312529ea57175cb5f8dec6634",
+    "projectorSha256": "021059cce659fe7f9170d5599761d7bbaf644b798dab9503aca30dc43e6beb14"
+  },
+  "harnessFiles": [
+    {
+      "path": "src/browser.mjs",
+      "sha256": "68747e7f30eb728e7cc7b9be63b2915e93e1afec58643be67e791c84b5e8f233"
+    },
+    {
+      "path": "src/capabilities.mjs",
+      "sha256": "85947fe872ca526466efbe7cd31016b5e2231378c60c8330cd3dfb0b01ef3bc7"
+    },
+    {
+      "path": "src/context.mjs",
+      "sha256": "1e63f2071e2f8d8487c069d534675452eda2019dbf38243603e524280e47dcba"
+    },
+    {
+      "path": "src/dispatch.mjs",
+      "sha256": "427aa1d8e86e44a43aa332d74109745bffb4be40c8955c7821e01c53ea457592"
+    },
+    {
+      "path": "src/engine.mjs",
+      "sha256": "34e955de05308f6c423d1df164248be179e12234a56f5d1b25ede3bf9c9ce55c"
+    },
+    {
+      "path": "src/evidence.mjs",
+      "sha256": "06a73222c9824ee662be8bca4955b553a2eea210f66177c459a0bcd198ac71a0"
+    },
+    {
+      "path": "src/harness/browser.mjs",
+      "sha256": "1c2ad9b0000620db6b32b83f2608490a0154620a7265d4af823ebe583b7470eb"
+    },
+    {
+      "path": "src/harness/checks.mjs",
+      "sha256": "c07b5cd38cd69d5788249d32d0badd6334013cc7e8bb5f999278e3e2637bc2bd"
+    },
+    {
+      "path": "src/harness/context.mjs",
+      "sha256": "b8a3f263adff6971123b150818b534346d08980ccf8b48844c92e2b86f55c5fb"
+    },
+    {
+      "path": "src/harness/data-input.mjs",
+      "sha256": "59a45f19b84b6650c1a2fbc4e65c511de8ec77bee537f5766e33a105e80021bd"
+    },
+    {
+      "path": "src/harness/data-transform.mjs",
+      "sha256": "287c95b72ee52c11cfca228e6f375bb3388ed33e5d272faaba703cf09fbb872b"
+    },
+    {
+      "path": "src/harness/function-test.mjs",
+      "sha256": "4fc73ca3690ac2b098e8d29d841f8ba0214c7efc1e61de30ff4f8efe99cf11ec"
+    },
+    {
+      "path": "src/harness/generation.mjs",
+      "sha256": "ec2f427fbfe47b00647ffdba10b6697587507008852e6f0befd40d91cadadae9"
+    },
+    {
+      "path": "src/harness/interface.mjs",
+      "sha256": "0bbd18afa7caee9e3cfe0dbabf789dba6baea0abedd23962de8491b2552da7b4"
+    },
+    {
+      "path": "src/harness/prerequisites.mjs",
+      "sha256": "7ab878621d293120c2aa54df92f6d2a0ebb543a53d923e3360d9dae6cb96539a"
+    },
+    {
+      "path": "src/harness/protocol.mjs",
+      "sha256": "b690f338b18537d9db5c9a9125b4126d01006ad5e80e7fb311cef4c3c6368cde"
+    },
+    {
+      "path": "src/harness/state.mjs",
+      "sha256": "afd5338888d2084932371cc511d475daa3f6fea05a960830547629fa30d7d079"
+    },
+    {
+      "path": "src/harness/tools.mjs",
+      "sha256": "69e0c34b0d2182116a01ec89fdfc163c448c606f41786b13df9bd1275d10e1cc"
+    },
+    {
+      "path": "src/inference-settings.mjs",
+      "sha256": "2625ef57cbc7b4b78de234225cc0c9c375951d6621a28c3520fc182b373bb823"
+    },
+    {
+      "path": "src/local-files.mjs",
+      "sha256": "8c19857b78c6a1780bd5103faadb1251763f6f0034d8154da04e3e2433613b98"
+    },
+    {
+      "path": "src/page-reader.mjs",
+      "sha256": "bae2cabb1dbe129a313e0c00341b95f3b38c5452dea5b908095e6bd49482ccb0"
+    },
+    {
+      "path": "src/portable-read.mjs",
+      "sha256": "ca6310b13c4ff8ee38a9a485ce9b2657f9dc05dccd99ec3f80595697e4c103b1"
+    },
+    {
+      "path": "src/profile.mjs",
+      "sha256": "e5bdd76dce042f8a9111afbe4f2fd99b6c036f1ae76ec3c953423d2127d460d1"
+    },
+    {
+      "path": "src/qualification.mjs",
+      "sha256": "2bd0675c425e0887fee460c05f4fed7f6782e29881860e5916b96cd9480189ad"
+    },
+    {
+      "path": "src/recall.mjs",
+      "sha256": "1ac7f8c89a7facbb8e395713cafc5af11c50c887fbe921684b78015da61c1afe"
+    },
+    {
+      "path": "src/relevance.mjs",
+      "sha256": "912b5f6f8784d691cf761c3f72eb3eee9282f919a84399a88a0e646ca727ab2c"
+    },
+    {
+      "path": "src/search-api.mjs",
+      "sha256": "22c351244d4b1dc52262f4cc2f865ee830f8b68e533d2ae30da3efc3f1696087"
+    },
+    {
+      "path": "src/server.mjs",
+      "sha256": "4b2cde9b9a372b4e69cf711c0ed8857f0ec4e24a679b95aca6591f51461b6da1"
+    },
+    {
+      "path": "src/startup.mjs",
+      "sha256": "5ae44695cb4c50695e52b74968af51a24846cd0810c7c9ec77ecbe478fb2afa0"
+    },
+    {
+      "path": "src/store.mjs",
+      "sha256": "d866fae6f3392e8f63581fa1bbd465bc303e49521e28e6246f4b05c7466fc46c"
+    },
+    {
+      "path": "src/tools.mjs",
+      "sha256": "642ee093025fc65579633cd92050b0e7fff1fe48aed0053c628c1d07e7783eef"
+    },
+    {
+      "path": "src/updates.mjs",
+      "sha256": "c1bfc9cb218e3360ed18ec593ccf11e54def1a06bd10f3c9ae3ca0b6766ff091"
+    }
+  ],
+  "harnessUnchanged": true,
+  "postMeasurementChanges": [
+    {
+      "path": "src/runtime.mjs",
+      "measuredSha256": "d84acff4a085619291c2502ccdb9830f52cf4c73243f6ec248e4b8eebe23b372",
+      "releaseSha256": "42c9d908e5f0a89c854bf648c4c44fd1864c01ab5a204d0a8f3bb6d0e134cd46",
+      "reason": "Early Windows runtime prerequisite check and no-retry dependency errors; no action-loop or generation changes."
+    },
+    {
+      "path": "src/windows-runtime.mjs",
+      "measuredSha256": null,
+      "releaseSha256": "536e5e98b8634731e253cf713f355251c1c4d0e57aa07b539232919d9f584fe8",
+      "reason": "Early Windows runtime prerequisite check and no-retry dependency errors; no action-loop or generation changes."
+    }
+  ],
+  "repair": {
+    "started": "2026-09-11T21:46:56.595Z",
+    "finished": "2026-09-11T21:54:12.568Z",
+    "scriptSha256": "c0f85e6a0b2ef15185eafb580fd9f7c72db836090bb8332cf817c4589fa537ac",
+    "scorerSha256": "4948da3b81c02e7b0cd5a9624c13d438de05b3cff0cbcdfc2aa39ce0983e8794",
+    "cases": [
+      {
+        "id": "hardware",
+        "request": "What hardware are you running on tom?",
+        "files": {}
+      },
+      {
+        "id": "group-events",
+        "request": "Read events.json. Create result.json with totals by category for events with enabled=true. Sum each event's count, including negative counts. Output only an object mapping category to its total.",
+        "files": {
+          "events.json": "[{\"category\":\"blue\",\"count\":6,\"enabled\":true},{\"category\":\"red\",\"count\":10,\"enabled\":false},{\"category\":\"blue\",\"count\":-2,\"enabled\":true},{\"category\":\"green\",\"count\":0,\"enabled\":true}]"
+        }
+      },
+      {
+        "id": "clamp-value",
+        "request": "Read source.cjs. Create solution.cjs exporting one function with module.exports. Clamp a finite number x to inclusive bounds low and high. If low is greater than high, swap the bounds. Do not mutate any input.",
+        "files": {
+          "source.cjs": "module.exports = (x, low, high) => x;\n"
+        }
+      },
+      {
+        "id": "sum-money",
+        "request": "Read source.cjs and create solution.cjs exporting one function with module.exports. Sum qty*cents only for rows whose status is \"paid\". Return integer cents. Empty input returns 0. Do not mutate input.",
+        "files": {
+          "source.cjs": "module.exports = rows => rows.reduce((s,r)=>s+r.qty*r.cents,0);\n"
+        }
+      },
+      {
+        "id": "join-stock",
+        "request": "Read stock.json and prices.json. Create result.json containing an array in stock order with only positive-quantity items. Each object must have exactly sku and valueCents, where valueCents = qty * the matching price.",
+        "files": {
+          "stock.json": "[{\"sku\":\"M7\",\"qty\":3},{\"sku\":\"R2\",\"qty\":0},{\"sku\":\"Q9\",\"qty\":5}]",
+          "prices.json": "{\"M7\":120,\"R2\":75,\"Q9\":9}"
+        }
+      },
+      {
+        "id": "paginate",
+        "request": "Read source.cjs and create solution.cjs exporting one function with module.exports. Pagination uses one-based page numbers. Nonpositive or noninteger page or size returns an empty array. An out-of-range page returns an empty array. Do not mutate input.",
+        "files": {
+          "source.cjs": "module.exports = (items,page,size) => items.slice(page*size,(page+1)*size);\n"
+        }
+      }
+    ],
+    "results": [
+      {
+        "case": "hardware",
+        "status": "complete",
+        "artifactPassed": true,
+        "completedPassed": true,
+        "fixturesUnchanged": true,
+        "wallMs": 30865,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "scope": "Mentions the actual CPU family and does not claim cloud hosting"
+        },
+        "content": "I am running on a machine with the following specifications: Platform: win32, Architecture: x64, CPU: Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz, Threads: 8, RAM: 32 GiB, Available RAM: 20.5 GiB.",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 1,
+          "usedTokens": 81,
+          "usedMs": 30859,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:46:56.615Z"
+        }
+      },
+      {
+        "case": "group-events",
+        "status": "complete",
+        "artifactPassed": true,
+        "completedPassed": true,
+        "fixturesUnchanged": true,
+        "wallMs": 27156,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "actual": {
+            "blue": 4,
+            "green": 0
+          }
+        },
+        "content": "{\n  \"blue\": 4,\n  \"green\": 0\n}\n",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 2,
+          "usedTokens": 166,
+          "usedMs": 27147,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:47:27.486Z"
+        }
+      },
+      {
+        "case": "clamp-value",
+        "status": "complete",
+        "artifactPassed": true,
+        "completedPassed": true,
+        "fixturesUnchanged": true,
+        "wallMs": 42545,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "actual": {
+                "value": 3,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "actual": {
+                "value": 0,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "actual": {
+                "value": 3,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 3,
+              "passed": true,
+              "actual": {
+                "value": -5,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 4,
+              "passed": true,
+              "actual": {
+                "value": 2,
+                "unchanged": true
+              }
+            }
+          ]
+        },
+        "content": "module.exports = (x, low, high) => {\n  if (low > high) {\n    [low, high] = [high, low];\n  }\n  return Math.max(low, Math.min(high, x));\n};\n",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 3,
+          "usedTokens": 263,
+          "usedMs": 42532,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:47:54.648Z"
+        }
+      },
+      {
+        "case": "sum-money",
+        "status": "complete",
+        "artifactPassed": true,
+        "completedPassed": true,
+        "fixturesUnchanged": true,
+        "wallMs": 46106,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "actual": {
+                "value": 0,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "actual": {
+                "value": 250,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "actual": {
+                "value": 21,
+                "unchanged": true
+              }
+            },
+            {
+              "index": 3,
+              "passed": true,
+              "actual": {
+                "value": -10,
+                "unchanged": true
+              }
+            }
+          ]
+        },
+        "content": "module.exports = rows => rows.reduce((s, r) => {\n    if (r.status === \"paid\") {\n        return s + r.qty * r.cents;\n    }\n    return s;\n}, 0);\n",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 3,
+          "usedTokens": 318,
+          "usedMs": 46096,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:48:37.200Z"
+        }
+      },
+      {
+        "case": "join-stock",
+        "status": "complete",
+        "artifactPassed": true,
+        "completedPassed": true,
+        "fixturesUnchanged": true,
+        "wallMs": 33515,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "actual": [
+            {
+              "sku": "M7",
+              "valueCents": 360
+            },
+            {
+              "sku": "Q9",
+              "valueCents": 45
+            }
+          ]
+        },
+        "content": "[\n  {\n    \"sku\": \"M7\",\n    \"valueCents\": 360\n  },\n  {\n    \"sku\": \"Q9\",\n    \"valueCents\": 45\n  }\n]\n",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 2,
+          "usedTokens": 254,
+          "usedMs": 33508,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:49:23.311Z"
+        }
+      },
+      {
+        "case": "paginate",
+        "status": "blocked",
+        "artifactPassed": true,
+        "completedPassed": false,
+        "fixturesUnchanged": true,
+        "wallMs": 255346,
+        "compactions": 0,
+        "assertions": {
+          "passed": true,
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "actual": {
+                "value": [
+                  1,
+                  2
+                ],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "actual": {
+                "value": [
+                  5
+                ],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "actual": {
+                "value": [],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 3,
+              "passed": true,
+              "actual": {
+                "value": [],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 4,
+              "passed": true,
+              "actual": {
+                "value": [],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 5,
+              "passed": true,
+              "actual": {
+                "value": [],
+                "unchanged": true
+              }
+            },
+            {
+              "index": 6,
+              "passed": true,
+              "actual": {
+                "value": [],
+                "unchanged": true
+              }
+            }
+          ]
+        },
+        "content": "module.exports = (items, page, size) => {\n    if (page <= 0 || size <= 0 || !Number.isInteger(page) || !Number.isInteger(size)) {\n        return [];\n    }\n\n    const startIndex = (page - 1) * size;\n    const endIndex = startIndex + size;\n\n    if (startIndex >= items.length) {\n        return [];\n    }\n\n    // Use slice which handles the upper bound gracefully\n    return items.slice(startIndex, endIndex);\n};\n",
+        "budget": {
+          "maxSteps": 24,
+          "maxTokens": 12288,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 11,
+          "usedTokens": 1023,
+          "usedMs": 255327,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:49:56.832Z"
+        }
+      }
+    ]
+  },
+  "core": {
+    "started": "2026-09-11T21:56:29.339Z",
+    "finished": "2026-09-11T22:03:25.856Z",
+    "protocol": "tom-baseline-v4-harness-review",
+    "results": [
+      {
+        "case": "file",
+        "browser": "edge",
+        "searchProvider": "bing",
+        "seed": 42,
+        "context": 4096,
+        "taskStatus": "complete",
+        "passed": true,
+        "assertions": {
+          "passed": true
+        },
+        "wallMs": 40344,
+        "budget": {
+          "maxSteps": 16,
+          "maxTokens": 10000,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 2,
+          "usedTokens": 43,
+          "usedMs": 40337,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:56:29.344Z"
+        },
+        "compactions": 0,
+        "toolErrors": 0,
+        "completionRejections": 0,
+        "minimumAvailableBytes": 21961596928,
+        "peakSupervisorRss": 133902336,
+        "answer": "receipt.txt created successfully with the content 'CEDAR-17'."
+      },
+      {
+        "case": "webpage",
+        "browser": "edge",
+        "searchProvider": "bing",
+        "seed": 42,
+        "context": 4096,
+        "taskStatus": "blocked",
+        "passed": false,
+        "assertions": {
+          "passed": false,
+          "error": "Task did not complete"
+        },
+        "wallMs": 305513,
+        "budget": {
+          "maxSteps": 16,
+          "maxTokens": 10000,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 4,
+          "usedTokens": 1213,
+          "usedMs": 305289,
+          "pendingTokens": 0,
+          "created": "2026-09-11T21:57:09.693Z"
+        },
+        "compactions": 4,
+        "toolErrors": 0,
+        "completionRejections": 0,
+        "minimumAvailableBytes": 21414576128,
+        "peakSupervisorRss": 141004800,
+        "answer": ""
+      },
+      {
+        "case": "followup",
+        "seed": 42,
+        "context": 4096,
+        "taskStatus": "skipped",
+        "passed": false,
+        "assertions": {
+          "passed": false,
+          "error": "The preceding webpage task did not complete."
+        },
+        "wallMs": 0,
+        "compactions": 0
+      },
+      {
+        "case": "browser",
+        "browser": "edge",
+        "searchProvider": "bing",
+        "seed": 42,
+        "context": 4096,
+        "taskStatus": "blocked",
+        "passed": false,
+        "assertions": {
+          "passed": false,
+          "successfulReads": 0
+        },
+        "wallMs": 36947,
+        "budget": {
+          "maxSteps": 16,
+          "maxTokens": 10000,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 3,
+          "usedTokens": 63,
+          "usedMs": 36941,
+          "pendingTokens": 0,
+          "created": "2026-09-11T22:02:15.208Z"
+        },
+        "compactions": 0,
+        "toolErrors": 0,
+        "completionRejections": 0,
+        "minimumAvailableBytes": 22087888896,
+        "peakSupervisorRss": 117166080,
+        "answer": ""
+      },
+      {
+        "case": "missing-page",
+        "browser": "edge",
+        "searchProvider": "bing",
+        "seed": 42,
+        "context": 4096,
+        "taskStatus": "blocked",
+        "passed": false,
+        "assertions": {
+          "passed": false,
+          "failureWasVisible": true
+        },
+        "wallMs": 13373,
+        "budget": {
+          "maxSteps": 16,
+          "maxTokens": 10000,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 1,
+          "usedTokens": 52,
+          "usedMs": 13367,
+          "pendingTokens": 0,
+          "created": "2026-09-11T22:02:52.158Z"
+        },
+        "compactions": 0,
+        "toolErrors": 0,
+        "completionRejections": 0,
+        "minimumAvailableBytes": 21789274112,
+        "peakSupervisorRss": 117444608,
+        "answer": "I cannot access the local URL http://127.0.0.1:51615/missing as it is a local address and I do not have the capability to access local network resources directly."
+      },
+      {
+        "case": "vision",
+        "seed": 42,
+        "passed": true,
+        "answer": "The two shapes are a red square and a blue circle. The large text is 'TOM 42'.",
+        "wallMs": 19876,
+        "taskStatus": "complete",
+        "budget": {
+          "maxSteps": 16,
+          "maxTokens": 10000,
+          "maxActiveMs": 600000,
+          "maxResponseTokens": 2048,
+          "usedSteps": 1,
+          "usedTokens": 28,
+          "usedMs": 19872,
+          "pendingTokens": 0,
+          "created": "2026-09-11T22:03:05.535Z"
+        }
+      }
+    ]
+  },
+  "browserAdapter": {
+    "modelDriven": false,
+    "observedAt": "2026-09-11T22:06:20.220Z",
+    "purpose": "One live search and primary-source read, not broad website qualification.",
+    "search": {
+      "provider": "exa",
+      "status": 200,
+      "query": "Gemma 4 E2B documentation",
+      "results": [
+        {
+          "title": "Gemma 4 model card  |  Google AI for Developers",
+          "url": "https://ai.google.dev/gemma/docs/core/model_card_4",
+          "snippet": "Gemma is a family of open models built by Google DeepMind. Gemma 4 models are multimodal, handling text and image input (with audio supported on E2B, E4B, and 12B models) and generating text output. This release includes open-weights models in both pre-trained and instruction-tuned variants. Gemma 4 features a context window of up to 256K tokens and maintains multilingual support in over 140 languages.\n...\nFeaturing both Dense and Mixture-of-Experts (MoE) architectures, Gemma 4 is well-suited for tasks like text generation, coding, and reasoning. The models are available in five distinct sizes: E2B, E4B, 12B, 26B A4B, and 31B. Their diverse sizes make them deployable in environments ranging from high-end phones to laptops and servers, democratizing access to state-of-the-art AI.\n...\nGemma 4 models are designed to deliver frontier-level performance at each size, targeting deployment scena",
+          "relevance": {
+            "terms": [
+              "gemma",
+              "e2b"
+            ],
+            "matched": [
+              "gemma",
+              "e2b"
+            ],
+            "identifying": [
+              "gemma",
+              "e2b"
+            ],
+            "missing": [],
+            "required": 2,
+            "passed": true
+          }
+        },
+        {
+          "title": "google/gemma-4-E2B",
+          "url": "https://huggingface.co/google/gemma-4-E2B",
+          "snippet": "google/gemma-4-E2B · Hugging Face\n...\nGemma is a family of open models built by Google DeepMind. Gemma 4 models are multimodal, handling text and image input (with audio supported on E2B, E4B, and 12B) and generating text output. This release includes open-weights models in both pre-trained and instruction-tuned variants. Gemma 4 features a context window of up to 256K tokens and maintains multilingual support in over 140 languages.\n...\nFeaturing both Dense and Mixture-of-Experts (MoE) architectures, Gemma 4 is well-suited for tasks like text generation, coding, and reasoning. The models are available in five distinct sizes: E2B, E4B, 12B, 26B A4B, and 31B. Their diverse sizes make them deployable in environments ranging from high-end phones to laptops and servers, democratizing access to state-of-the-art AI.\n...\n## Models Overview\n...\nGemma 4 models are designed to deliver frontier-leve",
+          "relevance": {
+            "terms": [
+              "gemma",
+              "e2b"
+            ],
+            "matched": [
+              "gemma",
+              "e2b"
+            ],
+            "identifying": [
+              "gemma",
+              "e2b"
+            ],
+            "missing": [],
+            "required": 2,
+            "passed": true
+          }
+        },
+        {
+          "title": "Gemma4",
+          "url": "https://huggingface.co/docs/transformers/v5.8.1/en/model_doc/gemma4",
+          "snippet": "# Gemma4\n...\nGemma 4 is a multimodal model with pretrained and instruction-tuned variants, available in E2B, E4B, 31B and 26B-A4B (MoE) parameter sizes. Gemma 4 models provide the following capabilities:\n...\n- Reasoning: All models in the family are designed as highly capable reasoners, with configurable thinking modes.\n- Extended Multimodalities: Processes Text, Image with variable aspect ratio and resolution support (all models), Video, and Audio (featured natively on the E2B and E4B models).\n- Increased Context Window: Small models feature a 128K context window, while the other models support 256K.\n- Enhanced Coding & Agentic Capabilities: Achieves notable improvements in coding benchmarks alongside built-in function-calling support, powering highly capable autonomous agents.\n- Native System Prompt Support: Gemma 4 introduces built-in support for the system role, enabling more structu",
+          "relevance": {
+            "terms": [
+              "gemma",
+              "e2b"
+            ],
+            "matched": [
+              "gemma",
+              "e2b"
+            ],
+            "identifying": [
+              "gemma",
+              "e2b"
+            ],
+            "missing": [],
+            "required": 2,
+            "passed": true
+          }
+        },
+        {
+          "title": "Get started with Gemma models  |  Google AI for Developers",
+          "url": "https://ai.google.dev/gemma/docs/get_started",
+          "snippet": "Tip: A good place to start is the Gemma 4 26B A4B model in\n...\nlatest available version, which can be used for many tasks and has lower resource requirements.\n...\nThe following table lists the\n...\nvariants of the Gemma model family and their intended deployment platforms:\n...\n### Gemma 4 Family\n...\nThe latest generation featuring multimodal (text, image, audio) inputs.\n...\n| Size | Variant | Input ➔ Output | Intended Platform |\n| --- | --- | --- | --- |\n| E2B | Gemma 4 (core) | Text, images, audio ➔ Text | Mobile devices |\n| E4B | Gemma 4 (core) | Text, images, audio ➔ Text | Mobile devices and laptops |\n| 12B | Gemma 4 (core) | Text, images, audio ➔ Text | Laptops, desktop computers and small servers |\n| A4B | Gemma 4 (core) | Text, images ➔ Text | Desktop computers and small servers |\n| 31B | Gemma 4 (core) | Text, images ➔ Text | Large servers or server clusters |",
+          "relevance": {
+            "terms": [
+              "gemma",
+              "e2b"
+            ],
+            "matched": [
+              "gemma",
+              "e2b"
+            ],
+            "identifying": [
+              "gemma",
+              "e2b"
+            ],
+            "missing": [],
+            "required": 2,
+            "passed": true
+          }
+        },
+        {
+          "title": "README.md · google/gemma-4-E2B at main",
+          "url": "https://huggingface.co/google/gemma-4-E2B/blob/main/README.md",
+          "snippet": "README.md · google/gemma-4-E2B at main\n...\nGemma is a family of open models built by Google DeepMind. Gemma 4 models are multimodal, handling text and image input (with audio supported on E2B, E4B, and 12B) and generating text output. This release includes open-weights models in both pre-trained and instruction-tuned variants. Gemma 4 features a context window of up to 256K tokens and maintains multilingual support in over 140 languages.\n...\nFeaturing both Dense and Mixture-of-Experts (MoE) architectures, Gemma 4 is well-suited for tasks like text generation, coding, and reasoning. The models are available in five distinct sizes: E2B, E4B, 12B, 26B A4B, and 31B. Their diverse sizes make them deployable in environments ranging from high-end phones to laptops and servers, democratizing access to state-of-the-art AI.\n...\n## Models Overview\n...\nGemma 4 models are designed to deliver frontier",
+          "relevance": {
+            "terms": [
+              "gemma",
+              "e2b"
+            ],
+            "matched": [
+              "gemma",
+              "e2b"
+            ],
+            "identifying": [
+              "gemma",
+              "e2b"
+            ],
+            "missing": [],
+            "required": 2,
+            "passed": true
+          }
+        }
+      ]
+    },
+    "read": {
+      "url": "https://ai.google.dev/gemma/docs/core/model_card_4",
+      "title": "Gemma 4 model card  |  Google AI for Developers",
+      "characters": 6000,
+      "blocked": false,
+      "error": null
+    },
+    "passed": true
+  },
+  "limitations": [
+    "One physical 32 GB Windows host; no low-memory or clean-machine fleet qualification.",
+    "One seed per case; prompts and prior developer results were visible to development.",
+    "Ordinary desktop and browser activity continued; times are indicative and not isolated laboratory measurements.",
+    "Pagination produced correct code but did not finish; it is not a completion success.",
+    "The webpage follow-up was skipped because its prerequisite failed; it is excluded from attempted-task denominators.",
+    "The legacy browser-result accessor in the core scorer was subsequently normalized for the v2 action format; neither attempted browser task recorded a source read, so no outcome changes.",
+    "Transport smoke evidence is separate from autonomous model-driven browsing.",
+    "UI artwork, packaging and an early Windows prerequisite guard were polished after these runs. Other measured source hashes remain unchanged; old/new runtime hashes are provided."
+  ]
+}
