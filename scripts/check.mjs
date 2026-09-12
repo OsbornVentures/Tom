@@ -10,6 +10,7 @@ for(const file of files){const r=spawnSync(process.execPath,['--check',file],{cw
 const pkg=JSON.parse(await fs.readFile(path.join(root,'package.json'))),product=JSON.parse(await fs.readFile(path.join(root,'config/product.json')));
 if(pkg.version!==product.version)throw new Error('Package and product versions disagree.');
 const tests=(await fs.readdir(path.join(root,'tests'))).filter(n=>n.endsWith('.test.mjs')).map(n=>'tests/'+n);
-const r=spawnSync(process.execPath,['--test',...tests],{cwd:root,stdio:'inherit',windowsHide:true});
+// Bound parallel Windows process startups so CI tests exercise behavior without CPU contention.
+const r=spawnSync(process.execPath,['--test','--test-concurrency=2',...tests],{cwd:root,stdio:'inherit',windowsHide:true});
 if(r.status!==0)process.exit(r.status??1);
 console.log(`Build checks passed: ${files.length} JavaScript files, version ${pkg.version}, deterministic test suite.`);
