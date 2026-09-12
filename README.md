@@ -6,10 +6,8 @@
 [![Version](https://img.shields.io/badge/version-0.5.2_beta-10b981)](https://github.com/OsbornVentures/Tom/releases/tag/v0.5.2-beta.1)
 [![License](https://img.shields.io/badge/source-Apache_2.0-38bdf8)](LICENSE)
 [![Platform](https://img.shields.io/badge/Windows-x64-64748b)](docs/BUILD.md)
-[![Stars](https://img.shields.io/github/stars/OsbornVentures/Tom?style=flat)](https://github.com/OsbornVentures/Tom/stargazers)
-[![Full downloads started](https://tom.osbornventures.com/badges/full-downloads.svg)](https://tom.osbornventures.com/)
-[![Network downloads](https://tom.osbornventures.com/badges/network-downloads.svg)](https://github.com/OsbornVentures/Tom/releases)
-[![GitHub clones over 14 days](https://tom.osbornventures.com/badges/clones.svg)](https://tom.osbornventures.com/stats.json)
+[![Downloads](https://tom.osbornventures.com/badges/downloads.svg)](https://tom.osbornventures.com/)
+[![Clones](https://tom.osbornventures.com/badges/clones.svg?totals=1)](https://tom.osbornventures.com/stats.json)
 
 ![Tom’s actual ready avatar: ASCII expressions, blinks and waiting dots](docs/assets/tom-ready.gif)
 
@@ -76,7 +74,7 @@ The model proposes language and actions. The harness supplies context, routes to
 
 The model runs on your computer. Conversations, images, preferences and task records live in Tom’s local `.state` folder. Search queries and browsed pages use external services; downloads and manual update checks also use the internet. Local does not mean every feature is offline.
 
-Commands run with your Windows account’s access. The work folder is a starting location, not a security sandbox. Review unfamiliar actions and keep backups. Project statistics refresh every six hours. Full-download counts measure initial EXE requests, not completed installs or unique people; retries and bots can count. GitHub clone counts show the last 14 days. The hosting counter stores aggregate counts without visitor identifiers. [Statistics and definitions](https://tom.osbornventures.com/stats.json).
+Commands run with your Windows account’s access. The work folder is a starting location, not a security sandbox. Review unfamiliar actions and keep backups. Project statistics refresh every six hours. Downloads combine installer editions and releases: hosted full EXEs count after a complete server-side transfer, while GitHub-hosted installers use GitHub’s asset counts. They are not installs or unique people. Resumed transfers split across requests cannot be verified as complete without visitor identifiers and are not added. Clones are a running total from the start of available tracking; daily history is retained after GitHub’s 14-day reporting window moves on. The hosting counter stores aggregate counts without visitor identifiers. [Statistics and definitions](https://tom.osbornventures.com/stats.json).
 
 </details>
 

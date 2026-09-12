@@ -27,6 +27,13 @@ export function shouldCount(request,range) {
     !/prefetch|prerender/i.test(`${request.headers.get('Purpose')||''} ${request.headers.get('Sec-Purpose')||''}`);
 }
 
+export function countCompletedStream(body,expectedBytes,onComplete,waitUntil) {
+  // Native piping preserves Content-Length and avoids executing JS for every EXE chunk.
+  const {readable,writable}=new FixedLengthStream(expectedBytes);
+  waitUntil(body.pipeTo(writable).then(onComplete).catch(()=>{}));
+  return readable;
+}
+
 async function download(request,env,ctx) {
   const etag=`"sha256-${RELEASE.sha256}"`;
   const headers=new Headers({...security,'Content-Type':'application/octet-stream',
@@ -42,21 +49,24 @@ async function download(request,env,ctx) {
   headers.set('Content-Length',String(range?.length??RELEASE.size));
   if(range)headers.set('Content-Range',`bytes ${range.offset}-${range.offset+range.length-1}/${RELEASE.size}`);
   if(shouldCount(request,range))ctx.waitUntil(env.STATS.prepare("INSERT INTO counters(name,value) VALUES('full_download_starts',1) ON CONFLICT(name) DO UPDATE SET value=value+1").run().catch(()=>{}));
-  return new Response(request.method==='HEAD'?null:object.body,{status:range?206:200,headers});
+  let body=request.method==='HEAD'?null:object.body;
+  if(body&&shouldCount(request,range)&&(!range||range.length===RELEASE.size))body=countCompletedStream(body,RELEASE.size,()=>env.STATS.prepare("INSERT INTO counters(name,value) VALUES('full_downloads',1) ON CONFLICT(name) DO UPDATE SET value=value+1").run(),p=>ctx.waitUntil(p));
+  return new Response(body,{status:range?206:200,headers});
 }
 
 export async function statistics(env) {
   const [snapshot,count]=await Promise.all([
     env.STATS.prepare("SELECT data,updated_at FROM snapshots WHERE name='github'").first(),
-    env.STATS.prepare("SELECT value FROM counters WHERE name='full_download_starts'").first(),
+    env.STATS.prepare("SELECT value FROM counters WHERE name='full_downloads'").first(),
   ]);
   const data=snapshot?JSON.parse(snapshot.data):{};
-  return {fullDownloadStarts:count?.value??0,...data,
+  const repositoryDownloads=data.githubDownloads??data.networkDownloads;
+  return {downloads:Number.isSafeInteger(repositoryDownloads)?(count?.value??0)+repositoryDownloads:null,
+    clones:data.clones?.totalTracked??null,clonesTrackedSince:data.clones?.trackedSince??null,
     updatedAt:snapshot?.updated_at??null,refreshEveryHours:6,
     stale:!snapshot||Date.now()-Date.parse(snapshot.updated_at)>7*3600000,
-    definitions:{fullDownloadStarts:'Successful initial EXE GET requests; excludes HEAD, prefetch and continuation ranges. Retries and bots can count. Not completed installs or unique people.',
-      clones:'GitHub clone events. Daily buckets are updated, not repeatedly added. Total starts at the first available day; GitHub only provides the most recent 14 days.',
-      networkDownloads:'GitHub download counts for network installer EXE assets, excluding checksums and source archives.'}};
+    definitions:{downloads:'Cumulative installer downloads across editions and releases. Hosted full EXEs count after a complete server-side transfer; GitHub-hosted installers use GitHub asset download counts. This is not a count of installs or unique people. Separate resumed ranges cannot be matched to a completed download without tracking identifiers and are not added.',
+      clones:'Cumulative GitHub clone events retained since tracking began. Daily history is kept after it leaves GitHub’s 14-day API window. Earlier unavailable history cannot be reconstructed.'}};
 }
 
 export async function refresh(env,fetcher=fetch) {
@@ -64,13 +74,18 @@ export async function refresh(env,fetcher=fetch) {
   if(env.GITHUB_STATS_TOKEN)headers.Authorization=`Bearer ${env.GITHUB_STATS_TOKEN}`;
   const get=async(path)=>{const r=await fetcher(`https://api.github.com/repos/OsbornVentures/Tom${path}`,{headers,signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error(`GitHub statistics unavailable (${r.status})`);return r.json();};
   const repo=await get('');
-  let networkDownloads=0;
+  const assets=[];
   for(let p=1;p<=20;p++) {
     const releases=await get(`/releases?per_page=100&page=${p}`);
-    for(const release of releases)for(const asset of release.assets??[])if(/^Tom-.+-Network-Setup\.exe$/.test(asset.name))networkDownloads+=asset.download_count;
+    for(const release of releases)for(const asset of release.assets??[]) {
+      const kind=/^Tom-.+-(Network|Offline)-Setup\.exe$/.exec(asset.name)?.[1]?.toLowerCase();
+      if(kind){if(!Number.isSafeInteger(asset.id)||!Number.isSafeInteger(asset.download_count)||asset.download_count<0)throw Error('Invalid GitHub download statistics');assets.push({id:asset.id,kind:kind==='offline'?'full':'network',count:asset.download_count});}
+    }
     if(releases.length<100)break;
     if(p===20)throw Error('Release pagination limit reached');
   }
+  if(assets.length)await env.STATS.batch(assets.map(a=>env.STATS.prepare('INSERT INTO github_downloads(asset_id,kind,count,observed_at) VALUES(?,?,?,?) ON CONFLICT(asset_id) DO UPDATE SET count=MAX(count,excluded.count),observed_at=excluded.observed_at').bind(a.id,a.kind,a.count,new Date().toISOString())));
+  const downloads=await env.STATS.prepare("SELECT COALESCE(SUM(count),0) AS total,COALESCE(SUM(CASE WHEN kind='network' THEN count ELSE 0 END),0) AS network,COALESCE(SUM(CASE WHEN kind='full' THEN count ELSE 0 END),0) AS full FROM github_downloads").first();
   let clones=null;
   if(env.GITHUB_STATS_TOKEN) {
     const traffic=await get('/traffic/clones?per=day');
@@ -82,7 +97,7 @@ export async function refresh(env,fetcher=fetch) {
     const totals=await env.STATS.prepare('SELECT COALESCE(SUM(count),0) AS total,MIN(day) AS since FROM clone_days').first();
     clones={last14Days:traffic.count,uniqueLast14Days:traffic.uniques,totalTracked:totals.total,trackedSince:totals.since};
   }
-  const data={stars:repo.stargazers_count,forks:repo.forks_count,networkDownloads,clones};
+  const data={stars:repo.stargazers_count,forks:repo.forks_count,githubDownloads:downloads.total,networkDownloads:downloads.network,githubFullDownloads:downloads.full,clones};
   await env.STATS.prepare("INSERT INTO snapshots(name,data,updated_at) VALUES('github',?,?) ON CONFLICT(name) DO UPDATE SET data=excluded.data,updated_at=excluded.updated_at").bind(JSON.stringify(data),new Date().toISOString()).run();
   return data;
 }
@@ -117,11 +132,12 @@ export default {
         ctx.waitUntil(refreshIfDue(env).catch(()=>{}));
         return json(await statistics(env));
       }
-      if(['/badges/full-downloads.svg','/badges/network-downloads.svg','/badges/clones.svg','/badges/stars.svg'].includes(url.pathname)) {
+      if(['/badges/full-downloads.svg','/badges/network-downloads.svg'].includes(url.pathname))return Response.redirect(url.origin+'/badges/downloads.svg',301);
+      if(['/badges/downloads.svg','/badges/clones.svg'].includes(url.pathname)) {
         const s=await statistics(env);
-        const values={'full-downloads':['full downloads started',s.fullDownloadStarts],'network-downloads':['network downloads',s.networkDownloads??'pending'],clones:['clones / 14 days',s.clones?.last14Days??'pending'],stars:['stars',s.stars??'pending']};
+        const values={downloads:['Downloads',s.downloads??'pending'],clones:['Clones',s.clones??'pending']};
         const [label,value]=values[url.pathname.split('/').pop().replace('.svg','')];
-        return badge(label,s.stale&&label!=='full downloads started'?`${value} (stale)`:value);
+        return badge(label,s.stale?`${value} (stale)`:value);
       }
       if(['/assets/tom-ready.gif','/assets/tom-nine-states.png','/assets/tom-help-demo.png','/assets/gemma-4.png'].includes(url.pathname)) {
         const obj=await env.RELEASES.get(url.pathname.slice(1));if(!obj)return new Response('Not found',{status:404});

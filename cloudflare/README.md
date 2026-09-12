@@ -8,7 +8,13 @@ Upload the final EXE under `releases/<version>/<filename>` with custom metadata 
 
 Publish only after a full HTTPS download matches the local SHA-256. Keep the network installer available on GitHub. Do not upload environment files, private build directories or state.
 
-`/stats.json` exposes definitions and refresh time. Clone daily buckets use upserts so overlapping 14-day GitHub windows do not inflate totals; tracking cannot recover older events. Initial download requests are counted separately from continuations, HEAD and prefetch. They are not completed installs or unique people. The download continues even if counter storage is unavailable. GitHub refresh failures preserve the previous snapshot and show it as stale after seven hours.
+`/stats.json` and the site expose exactly two aggregate metrics: cumulative `downloads` and `clones`. Edition breakdowns remain in private D1 tables and snapshots. Badges are `/badges/downloads.svg` and `/badges/clones.svg`; legacy edition badge URLs redirect to the combined badge.
+
+Clone daily buckets use upserts so overlapping 14-day GitHub windows do not inflate totals. Buckets are retained indefinitely, including when they leave the API window; tracking cannot recover unavailable older events. GitHub installer counts are retained per asset ID using their highest observed count, so removed releases do not erase earlier downloads and repeated polls do not double-count them.
+
+Hosted full downloads increment only after the stream reaches EOF with the exact release byte count. Partial, cancelled or truncated transfers, HEAD and prefetch do not increment that counter. The server cannot prove a file was saved to disk, and independent resumed ranges cannot be matched without visitor identifiers; those transfers are conservatively omitted. GitHub-hosted installers use GitHub's asset counts, whose completion semantics we do not control. Neither metric measures installations or unique people. Old private request-start counts are not converted into completed downloads. The download continues if counter storage fails. GitHub refresh failures preserve the previous public snapshot and show it as stale after seven hours.
+
+The hosted transfer uses Cloudflare's native [FixedLengthStream](https://developers.cloudflare.com/workers/runtime-apis/streams/transformstream/#fixedlengthstream). This preserves the response length and avoids per-chunk JavaScript execution for multi-gigabyte installers. Completion counting follows the native pipe promise; a failed pipe never increments the completed counter.
 
 Run `node --test cloudflare/worker.test.mjs` for HTTP-range, download integrity, counting and rolling-window checks.
 
