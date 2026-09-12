@@ -89,9 +89,9 @@ export async function refresh(env,fetcher=fetch) {
 
 // A public statistics request can repair a missed cron or initialize a new deployment.
 // Atomic D1 admission limits retries to one per ten minutes across Worker instances.
-export async function refreshIfDue(env,fetcher=fetch,now=Date.now()) {
+export async function refreshIfDue(env,fetcher=fetch,now=Date.now(),scheduled=false) {
   const snapshot=await env.STATS.prepare("SELECT updated_at FROM snapshots WHERE name='github'").first();
-  if(snapshot&&now-Date.parse(snapshot.updated_at)<6*3600000)return false;
+  if(!scheduled&&snapshot&&now-Date.parse(snapshot.updated_at)<6*3600000)return false;
   const admitted=await env.STATS.prepare("INSERT INTO refresh_locks(name,attempted_at) VALUES('github',?) ON CONFLICT(name) DO UPDATE SET attempted_at=excluded.attempted_at WHERE attempted_at<?").bind(now,now-600000).run();
   if(!admitted.meta?.changes)return false;
   await refresh(env,fetcher);
@@ -131,5 +131,5 @@ export default {
       return new Response('Not found',{status:404,headers:security});
     } catch {return json({error:'Temporarily unavailable. The network installer remains available on GitHub.'},503);}
   },
-  async scheduled(event,env,ctx) {ctx.waitUntil(refreshIfDue(env));},
+  async scheduled(event,env,ctx) {ctx.waitUntil(refreshIfDue(env,fetch,Date.now(),true));},
 };

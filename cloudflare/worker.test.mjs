@@ -61,3 +61,14 @@ test('concurrent refresh requests share a retry lock and preserve old data on fa
   assert.equal(await refreshIfDue(env,failure,now+700000),false);
  }finally{STATS.close();}
 });
+
+test('scheduled refresh runs on its six-hour boundary even after an off-cycle initial refresh',async()=>{
+ const STATS=database(),env={STATS};let requests=0;const now=Date.now();
+ const fake=async url=>{requests++;return Response.json(url.includes('/releases')?[]:{stargazers_count:2,forks_count:0});};
+ try {
+  await STATS.prepare("INSERT INTO snapshots(name,data,updated_at) VALUES('github','{}',?)").bind(new Date(now-4*3600000).toISOString()).run();
+  assert.equal(await refreshIfDue(env,fake,now),false);
+  assert.equal(await refreshIfDue(env,fake,now,true),true);assert.equal(requests,2);
+  assert.equal(await refreshIfDue(env,fake,now+1000,true),false);
+ }finally{STATS.close();}
+});
