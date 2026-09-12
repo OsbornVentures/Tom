@@ -1,5 +1,12 @@
 # Development changes
 
+## 0.5.2 beta revision 1
+
+- Complete offline EXE hosted at tom.osbornventures.com with SHA-256 verification and download resuming; network installer remains on GitHub.
+- Aggregate download and GitHub clone counters refresh every six hours. No visitor identifiers are stored by the counter.
+- Updated installer help and revision-aware update checks; existing installations retain user files during repair.
+- Redacted machine-local paths from current public benchmark evidence without changing measured outcomes.
+
 ## 0.5.2 beta
 
 - Compact avatar/name/context/actions header, nine ASCII activity states, richer ready expressions and merging compaction lines.

@@ -19,6 +19,8 @@ jobs:
           package-manager-cache: false
       - name: Syntax, versions and deterministic tests
         run: node scripts/check.mjs
+      - name: Download service ranges, integrity and counters
+        run: node --test cloudflare/worker.test.mjs
       - name: Compile Windows launcher and installer
         shell: pwsh
         run: |

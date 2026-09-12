@@ -4464,7 +4464,7 @@
               "type": "function",
               "function": {
                 "name": "write",
-                "arguments": "{\"summary\":\"Change an exact phrase\",\"path\":\"original.txt\",\"expectedHash\":\"new\",\"copyFrom\":\"C:\\\\Users\\\\User\\\\Documents\\\\ChatGPT\\\\usbAI\\\\.state\\\\capability\\\\2026-09-06T15-29-45-003Z\\\\exact-copy-42-minimal\\\\original.txt\",\"sourceHash\":\"c91826394af11e52d4a0c778cd518d7fa359570a4185b6d32fee2ab37b7320f4\",\"replacements\":[{\"find\":\"OPEN=09:15\",\"replace\":\"OPEN=10:45\"}]}"
+                "arguments": "{\"summary\":\"Change an exact phrase\",\"path\":\"original.txt\",\"expectedHash\":\"new\",\"copyFrom\":\"<workspace>\\\\.state\\\\capability\\\\2026-09-06T15-29-45-003Z\\\\exact-copy-42-minimal\\\\original.txt\",\"sourceHash\":\"c91826394af11e52d4a0c778cd518d7fa359570a4185b6d32fee2ab37b7320f4\",\"replacements\":[{\"find\":\"OPEN=09:15\",\"replace\":\"OPEN=10:45\"}]}"
               }
             }
           ],

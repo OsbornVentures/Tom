@@ -8,7 +8,7 @@ import {createHash} from 'node:crypto';
 import {Runtime} from '../src/runtime.mjs';
 import {cases,evaluate} from './capability-cases.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const python=process.env.BENCH_PYTHON??'C:/Users/User/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe';
+const python=process.env.BENCH_PYTHON??'python';
 const out=path.join(root,'.state/capability-aider',new Date().toISOString().replace(/[:.]/g,'-'));await fs.mkdir(out,{recursive:true});
 const config=JSON.parse(await fs.readFile(path.join(root,'config/runtime.json'))),sha=x=>createHash('sha256').update(x).digest('hex');
 const runtime=new Runtime(root,{...config,threads:2,logPath:path.relative(root,path.join(out,'runtime.log'))});

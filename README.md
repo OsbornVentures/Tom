@@ -3,15 +3,17 @@
 # Tom
 ### A local Windows AI with its work in view.
 
-[![Version](https://img.shields.io/badge/version-0.5.2_beta-10b981)](https://github.com/OsbornVentures/Tom/releases/tag/v0.5.2-beta)
+[![Version](https://img.shields.io/badge/version-0.5.2_beta-10b981)](https://github.com/OsbornVentures/Tom/releases/tag/v0.5.2-beta.1)
 [![License](https://img.shields.io/badge/source-Apache_2.0-38bdf8)](LICENSE)
 [![Platform](https://img.shields.io/badge/Windows-x64-64748b)](docs/BUILD.md)
 [![Stars](https://img.shields.io/github/stars/OsbornVentures/Tom?style=flat)](https://github.com/OsbornVentures/Tom/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/OsbornVentures/Tom/total)](https://github.com/OsbornVentures/Tom/releases)
+[![Full downloads started](https://tom.osbornventures.com/badges/full-downloads.svg)](https://tom.osbornventures.com/)
+[![Network downloads](https://tom.osbornventures.com/badges/network-downloads.svg)](https://github.com/OsbornVentures/Tom/releases)
+[![GitHub clones over 14 days](https://tom.osbornventures.com/badges/clones.svg)](https://tom.osbornventures.com/stats.json)
 
 ![Tom’s actual ready avatar: ASCII expressions, blinks and waiting dots](docs/assets/tom-ready.gif)
 
-**[Get Tom](https://github.com/OsbornVentures/Tom/releases/tag/v0.5.2-beta) · [User guide](docs/USER-GUIDE.md) · [Measured results](docs/benchmarks/0.5.2.md) · [Build it](docs/BUILD.md)**
+**[Download full installer](https://tom.osbornventures.com/download) · [Get Tom](https://tom.osbornventures.com/) · [User guide](docs/USER-GUIDE.md) · [Measured results](docs/benchmarks/0.5.2.md) · [Build it](docs/BUILD.md)**
 
 </div>
 
@@ -23,11 +25,11 @@ Tom brings a small Gemma 4 model, a visible action harness and a friendly interf
 
 | Edition | What you get | Best fit |
 |---|---|---|
-| **[Network setup](https://github.com/OsbornVentures/Tom/releases/download/v0.5.2-beta/Tom-0.5.2-Network-Setup.exe)** | Small installer; fetches pinned model and runtime files from their original vendors | First install with internet |
-| **[Offline setup](https://github.com/OsbornVentures/Tom/releases/tag/v0.5.2-beta)** | Complete app, E2B model, vision projector and CPU/Vulkan engines | USB and offline installation after system prerequisites |
+| **[Network setup](https://github.com/OsbornVentures/Tom/releases/download/v0.5.2-beta.1/Tom-0.5.2-Network-Setup.exe)** | Small installer; fetches pinned model and runtime files from their original vendors | First install with internet |
+| **[Full offline setup](https://tom.osbornventures.com/download)** | One complete EXE with the app, E2B model, vision projector and CPU/Vulkan engines | USB and offline installation after system prerequisites |
 | **Source** | Readable app/harness code, tests, licenses, build instructions and evidence | Inspect, modify or build Tom |
 
-The full offline EXE exceeds GitHub’s 2 GiB asset limit. Download its two parts and reconstruction helper from the release; hashes verify the parts and finished EXE. The Tom USB carries the complete EXE. Installers are release assets, separate from the source repository.
+The complete offline EXE is hosted at **[tom.osbornventures.com](https://tom.osbornventures.com/)**. Download it once and run it. The small network installer and readable source remain on GitHub. [SHA-256 checksums](https://tom.osbornventures.com/SHA256SUMS.txt) identify the exact packages.
 
 **Requires:** Windows 10/11, Intel/AMD x64, a supported installed browser, .NET Framework and [Microsoft’s latest Visual C++ x64 runtime](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). Install prerequisites before going offline. No GPU is required. 8 GB RAM is the compatibility target; 16 GB offers more headroom. Physical 8 GB qualification is pending; development measurements use a 32 GB host. ARM, macOS and Linux packages are not provided.
 
@@ -74,7 +76,7 @@ The model proposes language and actions. The harness supplies context, routes to
 
 The model runs on your computer. Conversations, images, preferences and task records live in Tom’s local `.state` folder. Search queries and browsed pages use external services; downloads and manual update checks also use the internet. Local does not mean every feature is offline.
 
-Commands run with your Windows account’s access. The work folder is a starting location, not a security sandbox. Review unfamiliar actions and keep backups. Public README badges read GitHub’s public counters; no secret-powered statistics worker is required. Download counts count release assets, not unique users or installations.
+Commands run with your Windows account’s access. The work folder is a starting location, not a security sandbox. Review unfamiliar actions and keep backups. Project statistics refresh every six hours. Full-download counts measure initial EXE requests, not completed installs or unique people; retries and bots can count. GitHub clone counts show the last 14 days. The hosting counter stores aggregate counts without visitor identifiers. [Statistics and definitions](https://tom.osbornventures.com/stats.json).
 
 </details>
 

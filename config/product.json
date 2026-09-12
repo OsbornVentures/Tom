@@ -2,6 +2,7 @@
   "name": "Tom",
   "version": "0.5.2",
   "channel": "beta",
+  "betaRevision": 1,
   "repository": "https://github.com/OsbornVentures/Tom",
   "defaultTheme": "night"
 }

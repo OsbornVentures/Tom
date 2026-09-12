@@ -19,7 +19,8 @@ export function selectRelease(releases,current,{beta=true}={}){
  return {status:comparison>0?'available':comparison===0?'current':'ahead',current,latest:release.tag_name,url:releasesUrl+'/tag/'+encodeURIComponent(release.tag_name),published:release.published_at??null,message:comparison>0?'A newer Tom package is available.':comparison===0?'You have the current Tom release.':'This build is newer than the published release.'};
 }
 export async function checkUpdates(product,request=fetch){
- const current=product.version+(product.channel==='beta'?'-beta':'');
+ const revision=Number.isSafeInteger(product.betaRevision)&&product.betaRevision>0?'.'+product.betaRevision:'';
+ const current=product.version+(product.channel==='beta'?'-beta'+revision:'');
  try{
   const response=await request(endpoint,{headers:{Accept:'application/vnd.github+json','User-Agent':'Tom/'+product.version,'X-GitHub-Api-Version':'2022-11-28'},signal:AbortSignal.timeout(10000),redirect:'error'});
   if(!response.ok)throw Error(response.status===403||response.status===429?'GitHub’s request limit was reached. Try again later.':'The release list could not be reached.');

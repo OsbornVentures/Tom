@@ -13,3 +13,9 @@ test('update checks use the public release list, send no user data, and handle o
  assert.equal(result.status,'current');assert.match(observed.url,/api.github.com\/repos\/OsbornVentures\/Tom\/releases/);assert.equal(observed.options.body,undefined);assert.equal(observed.options.headers.Authorization,undefined);
  assert.equal((await checkUpdates(product,async()=>{throw Error('offline');})).status,'unavailable');assert.equal((await checkUpdates(product,async()=>new Response('rate limited',{status:403}))).status,'unavailable');
 });
+test('a revised beta is offered once and recognized after installation',async()=>{
+ const request=async()=>new Response(JSON.stringify([{tag_name:'v0.5.2-beta.1',prerelease:true}]));
+ assert.equal((await checkUpdates({version:'0.5.2',channel:'beta'},request)).status,'available');
+ const updated=await checkUpdates({version:'0.5.2',channel:'beta',betaRevision:1},request);
+ assert.equal(updated.status,'current');assert.equal(updated.current,'0.5.2-beta.1');
+});

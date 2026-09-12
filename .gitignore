@@ -13,6 +13,8 @@ prerequisites/
 *.sqlite*
 *.log
 .env*
+Sample.env.txt
+*.env.txt
 .codex/
 .agents/
 *.pfx

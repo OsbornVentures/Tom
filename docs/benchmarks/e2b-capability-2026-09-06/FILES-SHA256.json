@@ -61,8 +61,8 @@
   },
   {
     "path": "diagnostic-events.json",
-    "bytes": 93262,
-    "sha256": "36fcf6d33d547f954112e3986888498d49d6aa89a99890d74c670caec0924a45"
+    "bytes": 92934,
+    "sha256": "45f5935568e45f3c60aeb70002ab652a364f41b7580044af5353b99b920946c9"
   },
   {
     "path": "diagnostic-source-snapshot/config/model-catalog.json",
@@ -131,8 +131,8 @@
   },
   {
     "path": "diagnostic-source-snapshot/scripts/capability-aider-benchmark.mjs",
-    "bytes": 6852,
-    "sha256": "310c723e18c56539866e29f8c9abfa364543583455815418837bd98209516569"
+    "bytes": 6772,
+    "sha256": "0b8ad75717d2afb2f6beedcd1d3d22564da7a71117a83c3a25afc895c5b8fae8"
   },
   {
     "path": "diagnostic-source-snapshot/scripts/capability-aider.py",
@@ -451,13 +451,13 @@
   },
   {
     "path": "internal-results-original-v1.json",
-    "bytes": 272480,
-    "sha256": "0173486f1a90b006b044d4e659bac3b6dfc021d1bcf4fcfdccddc7196fd303fb"
+    "bytes": 272439,
+    "sha256": "ce9ddcf6f99b976c5576984b833942bdd728bd646fc994363c7d40c5f5fb800b"
   },
   {
     "path": "internal-results.json",
-    "bytes": 306403,
-    "sha256": "0616aa42273916a3ef3f9e930119299fee4d99b33e9ffecf37b3604d73b5ddd4"
+    "bytes": 306362,
+    "sha256": "578cf2e06823cdc25f23c7d75e7bb83ef79355c5f661732c108a1d32e8339780"
   },
   {
     "path": "MARKETING.md",
@@ -551,8 +551,8 @@
   },
   {
     "path": "source-snapshot/scripts/capability-aider-benchmark.mjs",
-    "bytes": 6852,
-    "sha256": "310c723e18c56539866e29f8c9abfa364543583455815418837bd98209516569"
+    "bytes": 6772,
+    "sha256": "0b8ad75717d2afb2f6beedcd1d3d22564da7a71117a83c3a25afc895c5b8fae8"
   },
   {
     "path": "source-snapshot/scripts/capability-aider.py",
@@ -871,13 +871,13 @@
   },
   {
     "path": "tom-events.json",
-    "bytes": 250103,
-    "sha256": "d6668ebe7c5fa38d50b22adf31eb849cd4baf0fd8746972b06c1fe630b37766a"
+    "bytes": 248381,
+    "sha256": "c3c0d658dcf6efa8f88acdb76e93758b744a0635e528d01da9b002b80e1c4a29"
   },
   {
     "path": "trials.csv",
-    "bytes": 5967,
-    "sha256": "910833c182024630f5d496e8a3dad9007bddea6f15966ce93292768f30f6d467"
+    "bytes": 5863,
+    "sha256": "1a106218b6f14839587fa8e7ab7bca7a2ff79fafb94ec1935e9d64735bfcd8c8"
   },
   {
     "path": "worker-memory.csv",

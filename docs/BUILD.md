@@ -31,7 +31,7 @@ The build refuses an existing output directory, checks JavaScript and version ag
 
 The offline EXE contains Tom, Node, Playwright Core, CPU/Vulkan engines, E2B and vision. The network EXE embeds Tom and small components and downloads pinned large files from the original vendors. Both require the separately installed Microsoft runtime and browser. Personal state, other downloaded models, test outputs and Microsoft runtime DLLs are excluded.
 
-Distribute the EXEs, release checksums and any verified offline download parts/helper. The `build/` directory contains local intermediates. GitHub limits each release asset to below 2 GiB; the offline EXE is split there and reconstructed exactly. A USB can carry the complete EXE.
+Distribute the EXEs and release checksums. The `build/` directory contains local intermediates. Host the complete offline EXE at tom.osbornventures.com and the small network EXE on GitHub Releases. Verify a complete download against its local SHA-256 before publishing the link. A USB can carry the same complete EXE.
 
 ## Verify the release
 
